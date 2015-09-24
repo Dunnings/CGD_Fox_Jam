@@ -7,6 +7,12 @@ public class TunnelMaker : MonoBehaviour {
 
     public GameObject m_trailSprite;
     public GameObject m_breachSprite;
+
+    public GameObject m_trailParent;
+
+    public float m_trailScale = 1f;
+
+    public Vector3 m_offset;
     
 
     List<GameObject> spawnedTrailSprites = new List<GameObject>();
@@ -70,7 +76,11 @@ public class TunnelMaker : MonoBehaviour {
                     col *= 0.8f;
                     col.a = 1f;
                     newTrailSprite.GetComponent<SpriteRenderer>().color = col;
+                    newTrailSprite.transform.rotation = gameObject.transform.rotation;
+                    newTrailSprite.transform.localScale = Vector3.one * m_trailScale;
                     newTrailSprite.transform.position = lastPos + difference;
+                    newTrailSprite.gameObject.transform.SetParent(m_trailParent.transform);
+                    newTrailSprite.transform.Translate(m_offset);
                     spawnedTrailSprites.Add(newTrailSprite);
                 }
                 else

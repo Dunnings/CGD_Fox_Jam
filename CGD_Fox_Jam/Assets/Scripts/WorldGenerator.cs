@@ -20,7 +20,7 @@ public class WorldGenerator : MonoBehaviour {
     public float m_tileWidth = 0.7f;
     public float m_surfacePos = 2.7f;
     public float m_depth = 50f;
-    public float m_width = 100f;
+    public float m_width = 300f;
     public int m_rockCount = 100;
     public int m_wheatCount = 50;
 
@@ -36,19 +36,23 @@ public class WorldGenerator : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
-        int startNo = (int)(0f - (m_width / 2f));
-        for (int i = 0; i < m_width; i++)
+    void Start ()
+    {
+        int startNo = (int)(0f - ((m_width/m_tileWidth) / 2f));
+        for (float i = startNo; i < -startNo; i += m_tileWidth)
         {
-            GameObject newObj = GameObject.Instantiate<GameObject>(m_surfacePrefab);
+            GameObject newObj = Instantiate<GameObject>(m_surfacePrefab);
             newObj.GetComponent<SpriteRenderer>().sprite = m_surfaceSprite;
-            newObj.transform.position = new Vector3((startNo + i) * m_tileWidth, m_surfacePos, 0f);
+            newObj.transform.position = new Vector3(i, m_surfacePos, 0f);
             newObj.gameObject.transform.SetParent(gameObject.transform);
             m_allSurfaceTiles.Add(newObj);
         }
+
+
+
         m_dirtColor = m_surfaceSprite.texture.GetPixel(0, 0);
 
-        m_background.transform.position = new Vector3(0f, m_surfacePos, 0f);;
+        m_background.transform.position = new Vector3(0f, m_surfacePos, 0f);
         m_background.color = m_dirtColor;
 
         m_surfaceCover.transform.position = new Vector3(0f, m_surfacePos, 0f);
@@ -73,6 +77,7 @@ public class WorldGenerator : MonoBehaviour {
     {
         GameObject newRock = GameObject.Instantiate<GameObject>(m_rockPrefab);
         newRock.GetComponent<SpriteRenderer>().sprite = m_rockSpriteList[Random.Range(0, m_rockSpriteList.Count - 1)];
+        newRock.GetComponent<SpriteRenderer>().sortingOrder = 50;
         Vector3 newPos = new Vector3(Random.Range(0f - m_width / 2f, m_width / 2f), m_surfacePos - 1f - Random.Range(0f, m_depth), 0f);
         newRock.transform.position = newPos;
         newRock.transform.SetParent(gameObject.transform);
