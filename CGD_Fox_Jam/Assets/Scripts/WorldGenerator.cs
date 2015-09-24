@@ -9,6 +9,7 @@ public class WorldGenerator : MonoBehaviour {
     public List<Sprite> m_rockSpriteList;
 
     public SpriteRenderer m_background;
+    public SpriteRenderer m_surfaceCover;
 
     public GameObject m_surfacePrefab;
     public Sprite m_surfaceSprite;
@@ -27,6 +28,8 @@ public class WorldGenerator : MonoBehaviour {
     private List<GameObject> m_allRocks = new List<GameObject>();
     private List<GameObject> m_allWheat = new List<GameObject>();
 
+    public Color m_dirtColor = Color.white;
+
     void Awake()
     {
         Instance = this;
@@ -34,8 +37,6 @@ public class WorldGenerator : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
-
         int startNo = (int)(0f - (m_width / 2f));
         for (int i = 0; i < m_width; i++)
         {
@@ -45,9 +46,13 @@ public class WorldGenerator : MonoBehaviour {
             newObj.gameObject.transform.SetParent(gameObject.transform);
             m_allSurfaceTiles.Add(newObj);
         }
+        m_dirtColor = m_surfaceSprite.texture.GetPixel(0, 0);
 
-        m_background.transform.position = new Vector3(0f, m_surfacePos, 0f);
-        m_background.color = m_surfaceSprite.texture.GetPixel(0, 0);
+        m_background.transform.position = new Vector3(0f, m_surfacePos, 0f);;
+        m_background.color = m_dirtColor;
+
+        m_surfaceCover.transform.position = new Vector3(0f, m_surfacePos, 0f);
+        m_surfaceCover.color = Camera.main.backgroundColor;
 
         for (int i = 0; i < m_rockCount; i++)
         {

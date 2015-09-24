@@ -6,6 +6,7 @@ public class TunnelMaker : MonoBehaviour {
     //public Material m_mat;
 
     public GameObject m_trailSprite;
+    public GameObject m_breachSprite;
     
 
     List<GameObject> spawnedTrailSprites = new List<GameObject>();
@@ -41,7 +42,7 @@ public class TunnelMaker : MonoBehaviour {
 
 	// Update is called once per frame
 	void LateUpdate () {
-        if (transform.position.y < WorldGenerator.Instance.m_surfacePos)
+        if (transform.position.y < WorldGenerator.Instance.m_surfacePos + 2f)
         {
             float dist = (Vector3.Distance(transform.position, lastPos));
 
@@ -52,24 +53,45 @@ public class TunnelMaker : MonoBehaviour {
             {
                 Debug.Log(noToSpawn);
             }
+            bool hasBreached = false;
+            Vector3 breachPos = Vector3.zero;
             for (int i = 0; i < noToSpawn; i++)
             {
-                 
                 // Scale the distance
                 float scaledDist = dist * (float)((float)i / (float)noToSpawn); 
                 // Calculate the difference vector
                 Vector3 difference = transform.position - lastPos;
                 // Normalize and scale the difference vector
                 difference = difference.normalized * scaledDist;
+                if((lastPos + difference).y < WorldGenerator.Instance.m_surfacePos)
+                {
+                    GameObject newTrailSprite = Instantiate(m_trailSprite);
+                    Color col = WorldGenerator.Instance.m_dirtColor;
+                    col *= 0.8f;
+                    col.a = 1f;
+                    newTrailSprite.GetComponent<SpriteRenderer>().color = col;
+                    newTrailSprite.transform.position = lastPos + difference;
+                    spawnedTrailSprites.Add(newTrailSprite);
+                }
+                else
+                {
+                    hasBreached = true;
+                    breachPos = lastPos + difference;
+                }
+            }
 
-                GameObject newTrailSprite = Instantiate(m_trailSprite);
-                newTrailSprite.transform.position = lastPos + difference;
-                spawnedTrailSprites.Add(newTrailSprite);
+            if (hasBreached) 
+            {
+                //breachPos.y = WorldGenerator.Instance.m_surfacePos;
+
+                //GameObject newTrailSprite = Instantiate(m_breachSprite);
+                //newTrailSprite.transform.position = breachPos;
+                //spawnedTrailSprites.Add(newTrailSprite);
             }
 
         }
 
-        if(spawnedTrailSprites.Count > 250)
+        if(spawnedTrailSprites.Count > 500)
         {
             Destroy(spawnedTrailSprites[0].gameObject);
             spawnedTrailSprites.RemoveAt(0);
