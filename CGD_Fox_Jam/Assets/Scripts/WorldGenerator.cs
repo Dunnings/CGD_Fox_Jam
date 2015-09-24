@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class WorldGenerator : MonoBehaviour {
 
+    public static WorldGenerator Instance;
+
     public GameObject m_rockPrefab;
     public List<Sprite> m_rockSpriteList;
 
@@ -25,8 +27,15 @@ public class WorldGenerator : MonoBehaviour {
     private List<GameObject> m_allRocks = new List<GameObject>();
     private List<GameObject> m_allWheat = new List<GameObject>();
 
+    void Awake()
+    {
+        Instance = this;
+    }
+
     // Use this for initialization
     void Start () {
+
+
         int startNo = (int)(0f - (m_width / 2f));
         for (int i = 0; i < m_width; i++)
         {
