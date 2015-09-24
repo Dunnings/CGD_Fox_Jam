@@ -4,72 +4,67 @@ using System.Collections;
 public class FoxMovement : MonoBehaviour
 {
 	Vector3 acc, vel;
-	float mass;
-	public float addForce;
-	public float maxVel;
-	public GameObject skyBox;
-	public float breachHeight;
+	public float mass, addForce, gravForce, maxVel, breachHeight;
+	bool breached, lastFrameBreached;
 
 	void Start ()
 	{
 		acc = Vector3.zero;
 		vel = Vector3.zero;
-
-		mass = 1;
+		breached = false;
+		lastFrameBreached = false;
 	}
 	
 	void Update ()
 	{
 		Vector3 force;
 
-		if (transform.position.y > breachHeight)
+		if (transform.position.y >= breachHeight)
 		{
-			force = Vector3.down * (addForce);
+			breached = true;
+		}
+		else
+		{
+			breached = false;
+		}
+
+
+		//upon entering the ground again halve speed
+		if (!breached && lastFrameBreached)
+		{
+			vel /= 2;
+		}
+
+
+
+		//once the fox has breached the surface gravity (a downwards force) pulls it back
+		if (breached)
+		{
+			force = Vector3.down * (gravForce);
 
 			force.z.Equals(0);
 			Vector3 newVel, newPos;
 			
-			if (vel.magnitude >= maxVel)
-			{
-				force = Vector3.zero;
-			}
-			
 			acc = force / mass;
 			
 			newVel = vel + (Time.deltaTime * acc);
-			
 			newPos = transform.position + (Time.deltaTime * vel);
 			
 			vel = newVel;
 			transform.position = newPos;
 
-			//if (transform.rotation.z < 360 && transform.rotation.z > 181)
-			//{
+			//roate the fox in the air
+			float angle = Vector3.Angle(transform.up, Vector3.down);
+			float step;
 
-			gameObject.transform.Rotate(transform.forward, 2.5f);
-			//Vector3 tempDir = gameObject.transform.up.normalized;
-			//vel = vel.magnitude*tempDir;
-				
-				/*float step = vel.magnitude * Time.deltaTime;
-				
-				Vector3 temp = transform.up;
-
-				Vector3.RotateTowards(temp, Vector3.down, step, 0.0f);
-				
-				Vector3 difference = temp - transform.up;
-				
-				transform.Rotate(transform.forward, temp.z);
-
-				Vector3 tempDir = gameObject.transform.up.normalized;
-				vel = vel.magnitude*tempDir;
-			/*}
-			else
+			//test angle up against left and right, if right is closest  
+			if (Vector3.Angle(transform.up, Vector3.right) < Vector3.Angle(transform.up, Vector3.left))
 			{
-				gameObject.transform.Rotate(transform.forward, 2.5f);
-				Vector3 tempDir = gameObject.transform.up.normalized;
-				vel = vel.magnitude*tempDir;
-			}*/
+				angle *= -1;
+			}
 
+			step = (angle / vel.magnitude);
+			transform.Rotate(Vector3.forward, step);
 		}
 		else
 		{
@@ -91,22 +86,33 @@ public class FoxMovement : MonoBehaviour
 			
 			vel = newVel;
 			transform.position = newPos;
-			
-			if (Input.GetKey (KeyCode.RightArrow))
-			{
-				gameObject.transform.Rotate(transform.forward, -2.5f);
-				Vector3 tempDir = gameObject.transform.up.normalized;
-				vel = vel.magnitude*tempDir;
-			}
-			
-			if (Input.GetKey (KeyCode.LeftArrow))
-			{
-				gameObject.transform.Rotate(transform.forward, 2.5f);
-				Vector3 tempDir = gameObject.transform.up.normalized;
-				vel = vel.magnitude*tempDir;
-			}
 		}
 
+		if (breached)
+		{
+			lastFrameBreached = true;
+		}
+		else
+		{
+			lastFrameBreached = false;
+		}
+	}
 
+
+	void LateUpdate ()
+	{
+		if (Input.GetKey (KeyCode.RightArrow) && !breached)
+		{
+			gameObject.transform.Rotate(transform.forward, -2.5f);
+			Vector3 tempDir = gameObject.transform.up.normalized;
+			vel = vel.magnitude*tempDir;
+		}
+		
+		if (Input.GetKey (KeyCode.LeftArrow) && !breached)
+		{
+			gameObject.transform.Rotate(transform.forward, 2.5f);
+			Vector3 tempDir = gameObject.transform.up.normalized;
+			vel = vel.magnitude*tempDir;
+		}
 	}
 }
