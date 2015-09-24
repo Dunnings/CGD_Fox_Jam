@@ -10,11 +10,13 @@ public class EnemySpawner : MonoBehaviour
     public int SpawnRate;
     public int StartSpawnAmount;
     
-    float SpawnCounter = 0;     
+    float SpawnCounter = 0;
 
     void Start()
     {
         EnemyManager.GetInstance().MaxSpawnAmount = StartSpawnAmount;
+
+        EnemyManager.GetInstance().player = player; 
     }
 
     /// <summary>
@@ -53,19 +55,23 @@ public class EnemySpawner : MonoBehaviour
         //create a new farmer
         GameObject farmer = Instantiate(farmers[index], this.transform.position, Quaternion.identity) as GameObject;
 
-        //give new farmer a reference to the enemy
-        farmer.GetComponent<Enemy>().player = player;
+        //create key value pair instance 
+        KeyValuePair<int, GameObject> instance = new KeyValuePair<int, GameObject>(EnemyManager.GetInstance().id, farmer);
+
+        //temp store and increment the unique ID
+        int myID = EnemyManager.GetInstance().id;
+        EnemyManager.GetInstance().id++;
 
         //add farmer to list in EnemyManager
-        EnemyManager.GetInstance().SpawnedEnemies.Add(farmer);
+        EnemyManager.GetInstance().SpawnedEnemies.Add(instance);
 
         //get the enemy component and attach ID 
-        farmer.GetComponent<Enemy>().id = EnemyManager.GetInstance().SpawnedEnemies.Count - 1;       
+        farmer.GetComponent<Enemy>().id = myID; 
 
         //give farmer a name 
         farmer.name = "Farmer " + (EnemyManager.GetInstance().SpawnedEnemies.Count - 1).ToString();
 
-        //set the farmers parent to the spawner = nice heiercarchy 
+        //set the farmers parent to the spawner = nice hierarchy 
         farmer.transform.parent = this.transform;
     }
 }

@@ -15,9 +15,11 @@ public class EnemyManager
         return instance;
     }
 
-    public List<GameObject> SpawnedEnemies = new List<GameObject>();
+    public List<KeyValuePair<int, GameObject>> SpawnedEnemies = new List<KeyValuePair<int, GameObject>>();
     public List<GameObject> SpawnedAnimals = new List<GameObject>();
     public int MaxSpawnAmount;
+    public int id = 0;
+    public GameObject player; 
 
     /// <summary>
     /// Remove farmer at instance 
@@ -25,7 +27,14 @@ public class EnemyManager
     public void RemoveSpawnedFarmer (int id)
     {
         //remove instance from the list
-        SpawnedEnemies.RemoveAt(id);
+        for (int i = 0; i < SpawnedEnemies.Count-1; i++)
+        {
+            if(SpawnedEnemies[i].Key == id)
+            {
+                SpawnedEnemies.RemoveAt(i);
+                break;
+            }
+        }
     }
 
     /// <summary>
