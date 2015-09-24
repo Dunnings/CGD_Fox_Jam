@@ -1,45 +1,78 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour 
 {
     public enum EnemyType
     {
-        animal,
-        farmer
+        rifleFarmer,
+        shotgunFarmer, 
+        assaultFarmer
+        
     };
-
     public EnemyType type;
+
     public int id;
-    public int health;
     public float score;
     public float speed;
     public float bufferDistance;
     public float pushBackForce;
+    public float bulletSpeed;
+    public float shootCoolDown;
+    public float lineOfSight;
+    public float rifleFarmerPercentage = 0.6f;
+    public float shotgunFarmerPercentage = 0.8f;
+    public float assualtFarmerPercentage = 0.9f;
+    float shootCountdown;
+
+    public GameObject bullet;
+
+    public List<Sprite> farmerSprites = new List<Sprite>();
 
     public void Start()
     {
+       //create a random type based on percent weights
+        float thisRand = Random.Range(0.0f, 1.0f);
+
+        //generate farmer type
+        if(thisRand > assualtFarmerPercentage)
+        {
+            this.type = EnemyType.assaultFarmer;
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[2];
+            shootCoolDown = 0.1f;
+        }
+        else if (thisRand > shotgunFarmerPercentage)
+        {
+            this.type = EnemyType.shotgunFarmer;
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[1];
+            shootCoolDown = 1.0f;
+        }
+        else
+        {
+            this.type = EnemyType.rifleFarmer;
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[0];
+            shootCoolDown = 1.0f;
+        }
+
+        //create a rand buffer distance 
         bufferDistance =  Random.Range(1, bufferDistance);
+
+        //set the shoot count down to the shoot coolOff
+        shootCountdown = shootCoolDown;
     }
 
     /// <summary>
     /// Called every frame
     /// </summary>
     public void FixedUpdate()
-    {
-        //check type and call appropriate update
-        switch (type)
+    {      
+        FarmerUpdate();
+        if (EnemyManager.GetInstance().player.transform.position.y >= WorldGenerator.Instance.m_surfacePos
+            && Vector3.Distance(EnemyManager.GetInstance().player.transform.position, this.transform.position) < lineOfSight)
         {
-            case EnemyType.animal:
-                break;
-            case EnemyType.farmer:
-                FarmerUpdate();
-                //if (EnemyManager.GetInstance().player.transform.position.y >= WorldGenerator.Instance.m_surfacePos)
-                //{
-                //    ShootAtPlayer();
-                //}
-                break; 
-        }
+            ShootAtPlayer();
+        }             
     }
 
     /// <summary>
@@ -62,9 +95,61 @@ public class Enemy : MonoBehaviour
        }
     }
     
-    public void ShootAtPlayer()
+    /// <summary>
+    /// Script controls AI shooting
+    /// </summary>
+    public void ShootAtPlayer() 
     {
-        Debug.Log("Shooting at Player");
+        //if shoot cool down is over shoot
+        if (shootCountdown <= 0)
+        {
+            switch(type)
+            {
+                //different enemy types different firing types
+                case(EnemyType.rifleFarmer):
+                    SpawnBullet(); 
+                break;
+                case(EnemyType.shotgunFarmer):
+                    SpawnBullet();
+                    SpawnBullet();           
+                break;
+
+                case (EnemyType.assaultFarmer):
+                    SpawnBullet(); 
+                break;
+            }
+
+            //reset the cool off
+            shootCountdown = shootCoolDown; 
+        }
+        else
+        {
+            //decrement shoot cool off
+            shootCountdown -= Time.deltaTime;
+        }
+    }
+
+    /// <summary>
+    /// calculate a random bullet direction
+    /// </summary>
+    /// <returns></returns>
+    Vector3 CalcBulletDirection()
+    {
+       return new Vector3(Random.Range(EnemyManager.GetInstance().player.transform.position.x, EnemyManager.GetInstance().player.transform.position.x + 1.0f),
+                        Random.Range(EnemyManager.GetInstance().player.transform.position.y, EnemyManager.GetInstance().player.transform.position.y + 1.0f), 0.0f) -
+                        this.gameObject.transform.position;
+    }
+
+    /// <summary>
+    /// spawns a bullet
+    /// </summary>
+    void SpawnBullet()
+    {
+        //create bullet game object
+        GameObject newBullet = GameObject.Instantiate(bullet, this.transform.position, Quaternion.identity) as GameObject;
+        //create a direction for the bullet based on player
+        Vector3 direction = CalcBulletDirection();
+        newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed; 
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -113,18 +198,7 @@ public class Enemy : MonoBehaviour
    /// </summary>
     private void KillInstance()
     {
-        switch(type)
-        {
-            case EnemyType.animal:
-                EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
-                Destroy(gameObject);
-                break;
-
-            case EnemyType.farmer:
-                 EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
-                 Destroy(gameObject);
-                break;
-        }
-        
+        EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
+        Destroy(gameObject);        
     }
 }
