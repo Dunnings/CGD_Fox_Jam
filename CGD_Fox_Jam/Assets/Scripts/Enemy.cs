@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour 
 {
-    public GameObject player;
     public enum EnemyType
     {
         animal,
@@ -16,8 +15,7 @@ public class Enemy : MonoBehaviour
     public float score;
     public float speed;
     public float bufferDistance;
-
-    bool left;
+    public float pushBackForce;
 
     public void Start()
     {
@@ -27,7 +25,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// Called every frame
     /// </summary>
-    public void Update()
+    public void FixedUpdate()
     {
         //check type and call appropriate update
         switch (type)
@@ -35,7 +33,11 @@ public class Enemy : MonoBehaviour
             case EnemyType.animal:
                 break;
             case EnemyType.farmer:
-                FarmerUpdate(); 
+                FarmerUpdate();
+                //if (EnemyManager.GetInstance().player.transform.position.y >= WorldGenerator.Instance.m_surfacePos)
+                //{
+                //    ShootAtPlayer();
+                //}
                 break; 
         }
     }
@@ -44,37 +46,66 @@ public class Enemy : MonoBehaviour
     /// Enemy Farmer update
     /// </summary>
     public void FarmerUpdate()
-    {
+    {        
        //if enemy is less than the player pos increment up on 
-       if(this.transform.position.x <= player.transform.position.x - bufferDistance)
-       {
-           this.transform.position = new Vector2( (this.transform.position.x + (Random.Range(speed, speed * 1.5f) * Time.deltaTime)), 
-               this.transform.position.y);
+       if (gameObject.GetComponent<Rigidbody2D>().position.x <= EnemyManager.GetInstance().player.transform.position.x - bufferDistance)
+       {          
+           Vector3 vel = new Vector3(1, 0, 0);
+           gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
 
-           left = false;
        }
        //else increment down on the x 
-       else if (this.transform.position.x >= player.transform.position.x + bufferDistance)
+       else if (gameObject.GetComponent<Rigidbody2D>().position.x >= EnemyManager.GetInstance().player.transform.position.x + bufferDistance)
        {
-           this.transform.position = new Vector2((this.transform.position.x - (Random.Range(speed, speed * 1.5f) * Time.deltaTime)),
-               this.transform.position.y);
+           Vector3 vel = new Vector3(-1, 0, 0);
+           gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
+       }
+    }
+    
+    public void ShootAtPlayer()
+    {
+        Debug.Log("Shooting at Player");
+    }
 
-           left = true;
-       }
-       else
-       {
-           if(left)
-           {
-               this.transform.position = new Vector2((this.transform.position.x - (Random.Range((speed / 2.0f), (speed / 2.0f) * 1.5f) * Time.deltaTime)),
-                   this.transform.position.y);
-           }
-           else
-           {
-               this.transform.position = new Vector2((this.transform.position.x + (Random.Range((speed / 2.0f), (speed / 2.0f) * 1.5f) * Time.deltaTime)),
-                 this.transform.position.y);
-           }
-           
-       }
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        //player hits enemy
+        if (col.tag == "Player")
+        {
+            KillInstance();
+        }
+
+        //enemy hits enemy
+        if (col.tag == "Enemy")
+        {
+            PushBack(col);
+        }
+      
+    }
+
+    void OnTriggerEnterStay(Collider2D col)
+    {
+        //enemy hits enemy
+        if (col.tag == "Enemy")
+        {
+            PushBack(col);
+        }
+
+    }
+
+    /// <summary>
+    /// Applies a push back force between two objects
+    /// </summary>
+    /// <param name="col"></param>
+    void PushBack(Collider2D col)
+    {
+        Vector3 collisionPos = col.gameObject.GetComponent<Rigidbody2D>().transform.position;
+
+        Vector3 AwayFrom = collisionPos - this.gameObject.GetComponent<Rigidbody2D>().transform.position;
+
+        AwayFrom.Normalize();
+
+        gameObject.GetComponent<Rigidbody2D>().velocity = (AwayFrom * pushBackForce) * (speed/2.0f * Time.deltaTime) ;
     }
 
     /// <summary>
@@ -86,12 +117,12 @@ public class Enemy : MonoBehaviour
         {
             case EnemyType.animal:
                 EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
-                Destroy(this);
+                Destroy(gameObject);
                 break;
 
             case EnemyType.farmer:
                  EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
-                 Destroy(this);
+                 Destroy(gameObject);
                 break;
         }
         

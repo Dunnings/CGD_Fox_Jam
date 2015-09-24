@@ -1,13 +1,30 @@
 fileFormatVersion: 2
 guid: 94d4f100018749647871326a85395abe
-timeCreated: 1443026561
+timeCreated: 1443102351
 licenseType: Pro
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: back ear
+    21300002: front ear
+    21300004: head
+    21300006: jaw
+    21300008: body
+    21300010: front leg b
+    21300012: front thigh
+    21300014: tail
+    21300016: back thigh
+    21300018: neck
+    21300020: front leg a
+    21300022: fox2_11
+    21300024: fox2_12
+    21300026: front paw b
+    21300028: front paw a
+    21300030: back paw b
+    21300032: back paw a
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -30,15 +47,14 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 16
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
-  allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -49,7 +65,177 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: back ear
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 467
+        width: 29
+        height: 37
+      alignment: 9
+      pivot: {x: .599275589, y: .266567737}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: front ear
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 466
+        width: 31
+        height: 43
+      alignment: 9
+      pivot: {x: .555722892, y: .232186258}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 403
+        width: 109
+        height: 105
+      alignment: 9
+      pivot: {x: .853931248, y: .417742908}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: jaw
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 420
+        width: 54
+        height: 28
+      alignment: 9
+      pivot: {x: .883866072, y: .767335057}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: body
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 350
+        width: 269
+        height: 128
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: front leg b
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 276
+        width: 41
+        height: 101
+      alignment: 9
+      pivot: {x: .556175947, y: .916170955}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: front thigh
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 195
+        width: 89
+        height: 90
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: tail
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 176
+        width: 161
+        height: 153
+      alignment: 9
+      pivot: {x: .070833385, y: .917736173}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: back thigh
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 198
+        width: 80
+        height: 78
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: neck
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 39
+        width: 89
+        height: 123
+      alignment: 9
+      pivot: {x: .758786082, y: .44850567}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: front leg a
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 81
+        width: 45
+        height: 97
+      alignment: 9
+      pivot: {x: .53838706, y: .879907966}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: fox2_11
+      rect:
+        serializedVersion: 2
+        x: 252
+        y: 96
+        width: 78
+        height: 66
+      alignment: 9
+      pivot: {x: .241629183, y: .831519842}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: fox2_12
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 98
+        width: 76
+        height: 62
+      alignment: 9
+      pivot: {x: .333321422, y: .825047135}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: front paw b
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 8
+        width: 51
+        height: 64
+      alignment: 9
+      pivot: {x: .80483532, y: .886864424}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: front paw a
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 8
+        width: 55
+        height: 68
+      alignment: 9
+      pivot: {x: .793133557, y: .889510632}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: back paw b
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 3
+        width: 39
+        height: 77
+      alignment: 9
+      pivot: {x: .677168608, y: .873895109}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: back paw a
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 0
+        width: 43
+        height: 88
+      alignment: 9
+      pivot: {x: .633907557, y: .879503608}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
   assetBundleName: 
