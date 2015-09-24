@@ -13,6 +13,7 @@ public class FoxCam : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         Vector3 newPos = m_fox.transform.position;
+        newPos.y = Mathf.Min(WorldGenerator.Instance.m_surfacePos + 1f, newPos.y);
         newPos.z = -10f;
         gameObject.transform.position = newPos;
     }

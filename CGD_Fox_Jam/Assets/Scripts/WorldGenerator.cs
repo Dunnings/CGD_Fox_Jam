@@ -48,7 +48,7 @@ public class WorldGenerator : MonoBehaviour {
         }
         m_dirtColor = m_surfaceSprite.texture.GetPixel(0, 0);
 
-        m_background.transform.position = new Vector3(0f, m_surfacePos, 0f);
+        m_background.transform.position = new Vector3(0f, m_surfacePos, 0f);;
         m_background.color = m_dirtColor;
 
         m_surfaceCover.transform.position = new Vector3(0f, m_surfacePos, 0f);
