@@ -8,12 +8,15 @@ public class BreachParticle : MonoBehaviour {
     public ParticleSystem m_smallDebris;
     public ParticleSystem m_largeDebris;
 
+    public GameObject m_surfaceCollider;
+
     // Use this for initialization
     void Start ()
     {
+        m_debrisColor = WorldGenerator.Instance.m_dirtColor;
         m_smallDebris.startColor = m_debrisColor;
         m_largeDebris.startColor = m_debrisColor;
-        PlayBreach(); 
+        PlayBreach();
     }
 	
 	// Update is called once per frame
