@@ -53,6 +53,7 @@ public class TunnelMaker : MonoBehaviour {
             {
                 Debug.Log(noToSpawn);
             }
+
             bool hasBreached = false;
             Vector3 breachPos = Vector3.zero;
             for (int i = 0; i < noToSpawn; i++)
