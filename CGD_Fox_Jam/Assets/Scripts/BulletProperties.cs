@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BulletProperties : MonoBehaviour 
 {
-    float aliveTime = 2.0f;
+    float aliveTime = 1.0f;
     public float damage = 1.0f;
     
     /// <summary>
@@ -14,9 +14,7 @@ public class BulletProperties : MonoBehaviour
     {
         if(col.tag == "Player")
         {
-            Debug.Log("Bang");
-
-            Destroy(gameObject);
+           Destroy(gameObject);
         }
 
     }
