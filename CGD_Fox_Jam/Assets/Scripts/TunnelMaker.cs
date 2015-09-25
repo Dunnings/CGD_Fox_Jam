@@ -13,7 +13,10 @@ public class TunnelMaker : MonoBehaviour {
     public float m_trailScale = 1f;
 
     public Vector3 m_offset;
-    
+
+    public int trailLength = 50;
+
+    List<GameObject> allTrailSprites = new List<GameObject>();
 
     List<GameObject> spawnedTrailSprites = new List<GameObject>();
 
@@ -44,12 +47,26 @@ public class TunnelMaker : MonoBehaviour {
     void Start()
     {
         lastPos = transform.position;
+        for (int i = 0; i < trailLength; i++)
+        {
+            GameObject newTrailSprite = Instantiate(m_trailSprite);
+            newTrailSprite.SetActive(false);
+            newTrailSprite.transform.localScale = Vector3.one * m_trailScale;
+            allTrailSprites.Add(newTrailSprite);
+        }
     }
 
 	// Update is called once per frame
 	void LateUpdate () {
         if (transform.position.y < WorldGenerator.Instance.m_surfacePos + 2f)
         {
+
+            if (spawnedTrailSprites.Count >= trailLength - 5)
+            {
+                spawnedTrailSprites[0].SetActive(false);
+                spawnedTrailSprites.RemoveAt(0);
+            }
+
             float dist = (Vector3.Distance(transform.position, lastPos));
 
             int noToSpawn = (int)(dist * 10f);
@@ -72,17 +89,23 @@ public class TunnelMaker : MonoBehaviour {
                 difference = difference.normalized * scaledDist;
                 if((lastPos + difference).y < WorldGenerator.Instance.m_surfacePos)
                 {
-                    GameObject newTrailSprite = Instantiate(m_trailSprite);
+                    GameObject newTrailSprite = GetNextAvailableTrailSprite();
+                    if (newTrailSprite == null)
+                    {
+                        newTrailSprite = spawnedTrailSprites[0];
+                        spawnedTrailSprites.RemoveAt(0);
+                    }
+                    newTrailSprite.SetActive(true);
                     Color col = WorldGenerator.Instance.m_dirtColor;
                     col *= 0.8f;
                     col.a = 1f;
                     newTrailSprite.GetComponent<SpriteRenderer>().color = col;
                     newTrailSprite.transform.rotation = gameObject.transform.rotation;
-                    newTrailSprite.transform.localScale = Vector3.one * m_trailScale;
                     newTrailSprite.transform.position = lastPos + difference;
                     newTrailSprite.gameObject.transform.SetParent(m_trailParent.transform);
                     newTrailSprite.transform.Translate(m_offset);
                     spawnedTrailSprites.Add(newTrailSprite);
+                    
                 }
                 else
                 {
@@ -100,12 +123,6 @@ public class TunnelMaker : MonoBehaviour {
                 //spawnedTrailSprites.Add(newTrailSprite);
             }
 
-        }
-
-        if(spawnedTrailSprites.Count > 500)
-        {
-            Destroy(spawnedTrailSprites[0].gameObject);
-            spawnedTrailSprites.RemoveAt(0);
         }
 
         lastPos = transform.position;
@@ -141,4 +158,15 @@ public class TunnelMaker : MonoBehaviour {
 
         //tex.Apply();
     }
+
+    public GameObject GetNextAvailableTrailSprite() {
+        for (int i = 0; i < allTrailSprites.Count; i++)
+        {
+            if (!allTrailSprites[i].activeSelf) {
+                return allTrailSprites[i];
+            }
+        }
+        return null;
+    }
+
 }

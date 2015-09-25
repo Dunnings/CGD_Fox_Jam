@@ -7,7 +7,28 @@ public class FoxMovement : MonoBehaviour
 	public float mass, addForce, gravForce, maxVel, breachHeight;
 	bool breached, lastFrameBreached;
 
-	void Start ()
+    bool leftPressed, rightPressed;
+
+    public void PressLeft()
+    {
+        leftPressed = true;
+    }
+
+    public void PressRight()
+    {
+        rightPressed = true;
+    }
+
+    public void UnPressLeft()
+    {
+        leftPressed = false;
+    }
+    public void UnPressRight()
+    {
+        rightPressed = false;
+    }
+
+    void Start ()
 	{
 		acc = Vector3.zero;
 		vel = Vector3.zero;
@@ -115,14 +136,14 @@ public class FoxMovement : MonoBehaviour
         else
         {
             transform.position = proposedNewPos;
-            if (Input.GetKey(KeyCode.RightArrow) && !breached)
+            if ((Input.GetKey(KeyCode.RightArrow) || rightPressed) && !breached)
             {
                 gameObject.transform.Rotate(transform.forward, -2.5f);
                 Vector3 tempDir = gameObject.transform.up.normalized;
                 vel = vel.magnitude * tempDir;
             }
 
-            if (Input.GetKey(KeyCode.LeftArrow) && !breached)
+            if ((Input.GetKey(KeyCode.LeftArrow) || leftPressed) && !breached)
             {
                 gameObject.transform.Rotate(transform.forward, 2.5f);
                 Vector3 tempDir = gameObject.transform.up.normalized;
@@ -132,7 +153,6 @@ public class FoxMovement : MonoBehaviour
         Vector3 diff = vel.normalized;
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
-
     }
 
     public Vector3 GetVel()
