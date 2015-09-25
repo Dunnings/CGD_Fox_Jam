@@ -50,7 +50,7 @@ public class EnemySpawner : MonoBehaviour
     void SpawnFarmer()
     {
         //get a random index of farmers
-        int index = Random.Range(0, farmers.Count - 1);
+        int index = Random.Range(0, farmers.Count);
 
         Vector2 spawn = new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos);
 
