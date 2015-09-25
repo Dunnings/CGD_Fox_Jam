@@ -30,6 +30,8 @@ public class Enemy : MonoBehaviour
 
     public List<Sprite> farmerSprites = new List<Sprite>();
 
+    public GameObject m_DeathParticle;
+
     public void Start()
     {
        //create a random type based on percent weights
@@ -199,6 +201,11 @@ public class Enemy : MonoBehaviour
     private void KillInstance()
     {
         EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
+        GameObject deathParticles = Instantiate(m_DeathParticle);
+        Vector3 pos = transform.position;
+        pos.y = WorldGenerator.Instance.m_surfacePos;
+        deathParticles.transform.position = pos;
+        Destroy(deathParticles, 6f);
         Destroy(gameObject);        
     }
 }

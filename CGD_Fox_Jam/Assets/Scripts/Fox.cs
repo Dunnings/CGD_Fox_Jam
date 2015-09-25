@@ -94,7 +94,6 @@ public class Fox : MonoBehaviour {
     {
         GameObject x = Instantiate(m_enterParticle);
         Vector3 pos = transform.position;
-        pos.y = WorldGenerator.Instance.m_surfacePos;
         x.transform.position = pos;
 
         Vector3 dir = transform.position - lastPos;
