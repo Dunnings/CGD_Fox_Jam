@@ -56,6 +56,10 @@ public class FoxMovement : MonoBehaviour
 		{
 			vel /= 2;
 		}
+        else if(breached && !lastFrameBreached)
+        {
+            vel *= 1.4f;
+        }
 
         Vector3 proposedNewPos = transform.position;
         
@@ -166,6 +170,7 @@ public class FoxMovement : MonoBehaviour
 
         Vector3 diff = vel;
         diff.Normalize();
+        vel *= 0.25f;
     }
 
     public void BounceSide()
@@ -174,6 +179,7 @@ public class FoxMovement : MonoBehaviour
 
         Vector3 diff = vel;
         diff.Normalize();
+        vel *= 0.25f;
     }
 
     void LateUpdate ()

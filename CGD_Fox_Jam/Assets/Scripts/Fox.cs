@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System;
 
@@ -10,12 +11,14 @@ public class Fox : MonoBehaviour {
     public float m_healthBarStartWidth;
 
     public GameObject m_healthBar;
+    public Image m_healthBarBack;
 
     public GameObject m_breachParticle;
     public GameObject m_enterParticle;
 
     bool hasBreached = false;
     bool hasSpawnedThisBreach = false;
+    
 
     public Vector3 lastPos;
 
@@ -29,6 +32,7 @@ public class Fox : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        DecreaseHunger(2f * Time.deltaTime);
         m_healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(m_healthBarStartWidth * (m_hunger / m_maxHunger), 0f);
 
         if(transform.position.y > WorldGenerator.Instance.m_surfacePos)
@@ -105,5 +109,42 @@ public class Fox : MonoBehaviour {
         m_camera.ShakeCamera();
 
         Destroy(x, 6f);
+    }
+
+    public Color m_col1;
+    public Color m_col2;
+    public Color m_col3;
+
+    public void DecreaseHunger(float amount)
+    {
+        m_hunger -= amount;
+
+        if(m_hunger <= 0)
+        {
+
+            //GAME OVER
+            return;
+        }
+
+
+        m_healthBar.transform.localScale = new Vector3(m_hunger / m_maxHunger, 1f, 1f);
+        if (m_hunger / m_maxHunger > 0.6f)
+        {
+            m_healthBarBack.color = m_col1;
+        }
+        else if (m_hunger / m_maxHunger > 0.2f)
+        {
+            m_healthBarBack.color = m_col2;
+        }
+        else
+        {
+            m_healthBarBack.color = m_col3;
+        }
+    }
+
+    public void Reward()
+    {
+        float rewardAmount = 5f;
+        m_hunger = Mathf.Min(m_maxHunger, m_hunger + rewardAmount);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class TunnelMaker : MonoBehaviour {
 
@@ -55,7 +56,7 @@ public class TunnelMaker : MonoBehaviour {
             allTrailSprites.Add(newTrailSprite);
         }
     }
-
+    int m_tunnelCount = 0;
 	// Update is called once per frame
 	void LateUpdate () {
         if (transform.position.y < WorldGenerator.Instance.m_surfacePos + 2f)
@@ -82,7 +83,7 @@ public class TunnelMaker : MonoBehaviour {
             for (int i = 0; i < noToSpawn; i++)
             {
                 // Scale the distance
-                float scaledDist = dist * (float)((float)i / (float)noToSpawn); 
+                float scaledDist = dist * (float)((float)i / (float)noToSpawn);
                 // Calculate the difference vector
                 Vector3 difference = transform.position - lastPos;
                 // Normalize and scale the difference vector
@@ -105,7 +106,7 @@ public class TunnelMaker : MonoBehaviour {
                     newTrailSprite.gameObject.transform.SetParent(m_trailParent.transform);
                     newTrailSprite.transform.Translate(m_offset);
                     spawnedTrailSprites.Add(newTrailSprite);
-                    
+                    ReOrderTrailSprites();
                 }
                 else
                 {
@@ -157,6 +158,14 @@ public class TunnelMaker : MonoBehaviour {
         //}
 
         //tex.Apply();
+    }
+
+    private void ReOrderTrailSprites()
+    {
+        for (int i = 0; i < allTrailSprites.Count; i++)
+        {
+            allTrailSprites[i].GetComponent<SpriteRenderer>().sortingOrder = i;
+        }
     }
 
     public GameObject GetNextAvailableTrailSprite() {

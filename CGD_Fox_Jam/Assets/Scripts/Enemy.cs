@@ -48,13 +48,13 @@ public class Enemy : MonoBehaviour
         {
             this.type = EnemyType.shotgunFarmer;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[1];
-            shootCoolDown = 1.0f;
+            shootCoolDown = 0.5f;
         }
         else
         {
             this.type = EnemyType.rifleFarmer;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[0];
-            shootCoolDown = 1.0f;
+            shootCoolDown = 0.5f;
         }
 
         //create a rand buffer distance 
@@ -200,6 +200,8 @@ public class Enemy : MonoBehaviour
    /// </summary>
     private void KillInstance()
     {
+        EnemyManager.GetInstance().player.GetComponent<Fox>().Reward();
+
         EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
         GameObject deathParticles = Instantiate(m_DeathParticle);
         Vector3 pos = transform.position;
