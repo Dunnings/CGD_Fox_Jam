@@ -24,7 +24,7 @@ public class Animal : MonoBehaviour
 
     public List<Sprite> animalSprites = new List<Sprite>();
 
-    private Vector2 waypPoint = new Vector2();
+    private Vector2 wayPoint = new Vector2();
 
     public void Start()
     {
@@ -51,21 +51,21 @@ public class Animal : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (this.transform.position.x >= waypPoint.x - 1.0f
-            || this.transform.position.x <= waypPoint.x + 1.0f)
+        if (this.transform.position.x >= wayPoint.x - 1.0f
+            && this.transform.position.x <= wayPoint.x + 1.0f)
         {
-            CalcNewWayPoint();
+            wayPoint = CalcNewWayPoint();
         }
 
         //if enemy is less than the player pos increment up on 
-        if (gameObject.GetComponent<Rigidbody2D>().position.x <= waypPoint.x)
+        if (this.transform.position.x <= wayPoint.x)
         {
             Vector3 vel = new Vector3(1, 0, 0);
             gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
 
         }
         //else increment down on the x 
-        else if (gameObject.GetComponent<Rigidbody2D>().position.x >= waypPoint.x)
+        else if (this.transform.position.x >= wayPoint.x)
         {
             Vector3 vel = new Vector3(-1, 0, 0);
             gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
@@ -90,6 +90,14 @@ public class Animal : MonoBehaviour
             PushBack(col);
         }
 
+    }
+
+    void OnTriggerStay2D(Collider2D col)
+    {
+        if (col.tag == "Animal")
+        {
+            PushBack(col);
+        }
     }
 
     private void KillInstance()
