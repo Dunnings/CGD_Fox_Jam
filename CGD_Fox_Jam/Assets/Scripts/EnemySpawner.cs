@@ -55,7 +55,7 @@ public class EnemySpawner : MonoBehaviour
         Vector2 spawn = new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos);
 
         //create a new farmer
-        GameObject farmer = Instantiate(farmers[index], this.gameObject.transform.position, Quaternion.identity) as GameObject;
+        GameObject farmer = Instantiate(farmers[index], spawn, Quaternion.identity) as GameObject;
 
         //create key value pair instance 
         KeyValuePair<int, GameObject> instance = new KeyValuePair<int, GameObject>(EnemyManager.GetInstance().id, farmer);
