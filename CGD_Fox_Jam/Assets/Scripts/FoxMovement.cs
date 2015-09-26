@@ -9,6 +9,8 @@ public class FoxMovement : MonoBehaviour
 
     bool leftPressed, rightPressed;
 
+    public Animator m_animator;
+
     public void PressLeft()
     {
         leftPressed = true;
@@ -55,10 +57,14 @@ public class FoxMovement : MonoBehaviour
 		if (!breached && lastFrameBreached)
 		{
 			vel /= 2;
-		}
+            m_animator.SetBool("burrowing", true);
+            m_animator.SetBool("flying", false);
+        }
         else if(breached && !lastFrameBreached)
         {
             vel *= 1.4f;
+            m_animator.SetBool("flying", true);
+            m_animator.SetBool("burrowing", false);
         }
 
         Vector3 proposedNewPos = transform.position;
@@ -156,7 +162,7 @@ public class FoxMovement : MonoBehaviour
         }
         Vector3 diff = vel.normalized;
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+        transform.rotation = Quaternion.AngleAxis(rot_z - 90, Vector3.forward);
     }
 
     public Vector3 GetVel()
