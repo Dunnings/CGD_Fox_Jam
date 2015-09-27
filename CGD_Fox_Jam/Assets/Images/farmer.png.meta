@@ -1,0 +1,176 @@
+fileFormatVersion: 2
+guid: cb6cfd48d5544014586c48848ac0f16c
+timeCreated: 1443377405
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: shirt
+    21300002: head
+    21300004: body
+    21300006: arm_u
+    21300008: arm_l
+    21300010: thigh
+    21300012: hand
+    21300014: leg
+    21300016: farmer_8
+    21300018: boot
+    21300020: boot_s
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: shirt
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 286
+        width: 37
+        height: 44
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 321
+        width: 30
+        height: 44
+      alignment: 9
+      pivot: {x: .353065997, y: .0566933379}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: body
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 199
+        width: 49
+        height: 78
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: arm_u
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 257
+        width: 22
+        height: 53
+      alignment: 9
+      pivot: {x: .505008698, y: .784857988}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: arm_l
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 203
+        width: 17
+        height: 36
+      alignment: 9
+      pivot: {x: .507065713, y: .883711934}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: thigh
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 122
+        width: 44
+        height: 75
+      alignment: 9
+      pivot: {x: .490056306, y: .791686833}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: hand
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 171
+        width: 14
+        height: 22
+      alignment: 9
+      pivot: {x: .56005913, y: .707477927}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: leg
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 63
+        width: 32
+        height: 58
+      alignment: 9
+      pivot: {x: .554691553, y: .89226824}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: farmer_8
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 96
+        width: 22
+        height: 59
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: boot
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 5
+        width: 50
+        height: 51
+      alignment: 9
+      pivot: {x: .289985746, y: .928951025}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: boot_s
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 9
+        width: 45
+        height: 45
+      alignment: 9
+      pivot: {x: .286096692, y: .918084621}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
