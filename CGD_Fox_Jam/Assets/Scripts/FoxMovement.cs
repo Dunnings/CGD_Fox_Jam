@@ -73,8 +73,8 @@ public class FoxMovement : MonoBehaviour
 		if (breached)
 		{
 			force = Vector3.down * (gravForce);
-
-			force.z.Equals(0);
+            force.z = 0f;
+			//force.z.Equals(0);
 			Vector3 newVel, newPos;
 			
 			acc = force / mass;
@@ -129,8 +129,6 @@ public class FoxMovement : MonoBehaviour
 			lastFrameBreached = false;
         }
 
-        
-
         if (proposedNewPos.y < WorldGenerator.Instance.m_surfacePos - WorldGenerator.Instance.m_depth)
         {
             BounceBottom();
@@ -162,7 +160,7 @@ public class FoxMovement : MonoBehaviour
         }
         Vector3 diff = vel.normalized;
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(rot_z - 90, Vector3.forward);
+        gameObject.transform.rotation = Quaternion.AngleAxis(rot_z - 90, Vector3.forward);
     }
 
     public Vector3 GetVel()
@@ -186,9 +184,5 @@ public class FoxMovement : MonoBehaviour
         Vector3 diff = vel;
         diff.Normalize();
         vel *= 0.25f;
-    }
-
-    void LateUpdate ()
-	{
     }
 }
