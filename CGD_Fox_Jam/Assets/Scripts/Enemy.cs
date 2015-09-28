@@ -208,6 +208,7 @@ public class Enemy : MonoBehaviour
         pos.y = WorldGenerator.Instance.m_surfacePos;
         deathParticles.transform.position = pos;
         Destroy(deathParticles, 6f);
+        SFXManager.Instance.PlayDeathSound();
         Destroy(gameObject);        
     }
 }
