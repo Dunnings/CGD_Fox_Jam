@@ -41,19 +41,19 @@ public class Enemy : MonoBehaviour
         if(thisRand > assualtFarmerPercentage)
         {
             this.type = EnemyType.assaultFarmer;
-            this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[2];
+            //this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[2];
             shootCoolDown = 0.1f;
         }
         else if (thisRand > shotgunFarmerPercentage)
         {
             this.type = EnemyType.shotgunFarmer;
-            this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[1];
+            //this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[1];
             shootCoolDown = 0.5f;
         }
         else
         {
             this.type = EnemyType.rifleFarmer;
-            this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[0];
+            //this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[0];
             shootCoolDown = 0.5f;
         }
 
@@ -88,12 +88,15 @@ public class Enemy : MonoBehaviour
            Vector3 vel = new Vector3(1, 0, 0);
            gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
 
+           transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
        }
        //else increment down on the x 
-       else if (gameObject.GetComponent<Rigidbody2D>().position.x >= EnemyManager.GetInstance().player.transform.position.x + bufferDistance)
+       else if (gameObject.transform.position.x >= EnemyManager.GetInstance().player.transform.position.x + bufferDistance)
        {
            Vector3 vel = new Vector3(-1, 0, 0);
            gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
+
+           transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
        }
     }
     
