@@ -88,7 +88,7 @@ public class Enemy : MonoBehaviour
            Vector3 vel = new Vector3(1, 0, 0);
            gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
 
-           transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+           transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
        }
        //else increment down on the x 
        else if (gameObject.transform.position.x >= EnemyManager.GetInstance().player.transform.position.x + bufferDistance)
@@ -96,7 +96,7 @@ public class Enemy : MonoBehaviour
            Vector3 vel = new Vector3(-1, 0, 0);
            gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
 
-           transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
+           transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
        }
     }
     
