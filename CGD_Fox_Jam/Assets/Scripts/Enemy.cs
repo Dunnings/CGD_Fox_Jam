@@ -13,24 +13,20 @@ public class Enemy : MonoBehaviour
     };
     public EnemyType type;
 
+	Collider2D currentCol;
+
     public int id;
-    public float score;
-    public float speed;
-    public float bufferDistance;
-    public float pushBackForce;
-    public float bulletSpeed;
-    public float shootCoolDown;
-    public float lineOfSight;
-    public float rifleFarmerPercentage = 0.6f;
-    public float shotgunFarmerPercentage = 0.8f;
-    public float assualtFarmerPercentage = 0.9f;
+	public float score, speed, bufferDistance, pushBackForce, bulletSpeed, shootCoolDown, lineOfSight, rifleFarmerPercentage = 0.6f,
+	shotgunFarmerPercentage = 0.8f, assualtFarmerPercentage = 0.9f ;
     float shootCountdown;
 
-    public GameObject bullet;
+	bool stayHit = false, colHit = false;
+
+	Vector3 poot = Vector3.zero;
+
+    public GameObject bullet, m_DeathParticle;
 
     public List<Sprite> farmerSprites = new List<Sprite>();
-
-    public GameObject m_DeathParticle;
 
     public void Start()
     {
@@ -68,7 +64,7 @@ public class Enemy : MonoBehaviour
     /// Called every frame
     /// </summary>
     public void FixedUpdate()
-    {      
+    {
         FarmerUpdate();
         if (EnemyManager.GetInstance().player.transform.position.y >= WorldGenerator.Instance.m_surfacePos
             && Vector3.Distance(EnemyManager.GetInstance().player.transform.position, this.transform.position) < lineOfSight)
@@ -84,18 +80,33 @@ public class Enemy : MonoBehaviour
     {        
        //if enemy is less than the player pos increment up on 
        if (gameObject.GetComponent<Rigidbody2D>().position.x <= EnemyManager.GetInstance().player.transform.position.x - bufferDistance)
-       {          
+       {   
            Vector3 vel = new Vector3(1, 0, 0);
-           gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
+           
+			if (colHit || stayHit)
+			{
+				gameObject.GetComponent<Rigidbody2D>().velocity = poot ;
+			}
+			else
+			{
+				gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
+			}
 
-           transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+			transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
        }
        //else increment down on the x 
        else if (gameObject.transform.position.x >= EnemyManager.GetInstance().player.transform.position.x + bufferDistance)
        {
            Vector3 vel = new Vector3(-1, 0, 0);
-           gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
 
+			if (colHit || stayHit)
+			{
+				gameObject.GetComponent<Rigidbody2D>().velocity = poot ;
+			}
+			else
+			{
+				gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
+			}
            transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
        }
     }
@@ -159,6 +170,8 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
+		currentCol = col;
+
         //player hits enemy
         if (col.tag == "Player")
         {
@@ -166,22 +179,30 @@ public class Enemy : MonoBehaviour
         }
 
         //enemy hits enemy
-        if (col.tag == "Enemy")
-        {
-            PushBack(col);
-        }
-      
+        if (col.tag == "Enemy") {
+			PushBack (col);
+			colHit = true;
+		}      
     }
 
-    void OnTriggerEnterStay(Collider2D col)
+    void OnTriggerStay2D(Collider2D col)
     {
-        //enemy hits enemy
-        if (col.tag == "Enemy")
-        {
-            PushBack(col);
-        }
+		currentCol = col;
 
-    }
+		//enemy hits enemy
+		if (col.tag == "Enemy") {
+			PushBack (col);
+			Debug.Log ("Cunt");
+			stayHit = true;
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D col)
+	{
+		colHit = false;
+		stayHit = false;
+	}
+	
 
     /// <summary>
     /// Applies a push back force between two objects
@@ -191,11 +212,11 @@ public class Enemy : MonoBehaviour
     {
         Vector3 collisionPos = col.gameObject.GetComponent<Rigidbody2D>().transform.position;
 
-        Vector3 AwayFrom = collisionPos - this.gameObject.GetComponent<Rigidbody2D>().transform.position;
+		Vector3 AwayFrom = this.gameObject.GetComponent<Rigidbody2D>().transform.position - collisionPos;
 
         AwayFrom.Normalize();
 
-        gameObject.GetComponent<Rigidbody2D>().velocity = (AwayFrom * pushBackForce) * (speed/2.0f * Time.deltaTime) ;
+        poot = (AwayFrom * pushBackForce) * (Time.deltaTime) ;
     }
 
     /// <summary>
@@ -214,4 +235,16 @@ public class Enemy : MonoBehaviour
         SFXManager.Instance.PlayDeathSound();
         Destroy(gameObject);        
     }
+
+	void LateUpdate ()
+	{
+		/*if (stayHit)
+		{
+			stayHit = false;
+		}
+		if (colHit)
+		{
+			colHit = false;
+		}*/
+	}
 }
