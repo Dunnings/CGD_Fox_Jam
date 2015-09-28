@@ -7,13 +7,13 @@ public class AnimalSpawner : MonoBehaviour
     //list stores all enemies
     public GameObject animal;
     public int SpawnRate;
-    public int StartSpawnAmount;
+    public int SpawnAmount;
 
     float SpawnCounter = 0;
 
     void Start()
     {
-
+        AnimalManager.GetInstance().MaxSpawnAmount += SpawnAmount;
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public class AnimalSpawner : MonoBehaviour
         if (SpawnCounter <= 0)
         {
             //and the amount of enemies spawned is less than the max spawn
-            if (EnemyManager.GetInstance().SpawnedEnemies.Count != EnemyManager.GetInstance().MaxSpawnAmount)
+            if (AnimalManager.GetInstance().SpawnedAnimals.Count != AnimalManager.GetInstance().MaxSpawnAmount)
             {
                 //spawn a farmer
                 SpawnAnimal();
