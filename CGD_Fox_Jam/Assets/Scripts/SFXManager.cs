@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
 public class SFXManager : MonoBehaviour {
-
-    public List<AudioClip> deathSounds = new List<AudioClip>();
+    public static SFXManager Instance;
 
     public AudioSource m_source;
 
 	// Use this for initialization
 	void Start () {
+        Instance = this;
 	}
 	
 	// Update is called once per frame
@@ -18,9 +18,7 @@ public class SFXManager : MonoBehaviour {
 
     public void PlayDeathSound()
     {
-        m_source.pitch = Random.Range(0.8f, 1.2f);
-        int randNo = Random.Range(0, deathSounds.Count - 1);
-        m_source.clip = deathSounds[randNo];
+        m_source.pitch = Random.Range(0.8f, 1.2f);  
         m_source.Play();
     }
 }

@@ -5,8 +5,6 @@ public class WorldGenerator : MonoBehaviour {
 
     public static WorldGenerator Instance;
 
-    public GameObject m_bedrockPrefab;
-
     public GameObject m_rockPrefab;
     public List<Sprite> m_rockSpriteList;
 
@@ -50,38 +48,6 @@ public class WorldGenerator : MonoBehaviour {
             m_allSurfaceTiles.Add(newObj);
         }
 
-        //Bottom
-        for (int x = 1; x < 40; x++)
-        {
-            for (float i = startNo; i < -startNo; i += m_tileWidth)
-            {
-                GameObject newObj = Instantiate<GameObject>(m_bedrockPrefab);
-                newObj.transform.position = new Vector3(i, m_surfacePos - m_depth - (x * m_tileWidth), 0f);
-                newObj.gameObject.transform.SetParent(gameObject.transform);
-            }
-        }
-
-        //Right
-        for (int x = -40; x < 30; x++)
-        {
-            for (int i = 1; i < 30; i++)
-            {
-                GameObject newObj = Instantiate<GameObject>(m_bedrockPrefab);
-                newObj.transform.position = new Vector3((m_width / 2) + i * m_tileWidth, m_surfacePos - (x * m_tileWidth), 0f);
-                newObj.gameObject.transform.SetParent(gameObject.transform);
-            }
-        }
-
-        //Left
-        for (int x = -40; x < 30; x++)
-        {
-            for (int i = 1; i < 30; i++)
-            {
-                GameObject newObj = Instantiate<GameObject>(m_bedrockPrefab);
-                newObj.transform.position = new Vector3(-(m_width / 2) - i * m_tileWidth, m_surfacePos - (x * m_tileWidth), 0f);
-                newObj.gameObject.transform.SetParent(gameObject.transform);
-            }
-        }
 
 
         m_dirtColor = m_surfaceSprite.texture.GetPixel(0, 0);
