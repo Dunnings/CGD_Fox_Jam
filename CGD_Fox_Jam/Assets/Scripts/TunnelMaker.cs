@@ -88,8 +88,7 @@ public class TunnelMaker : MonoBehaviour {
                 Vector3 difference = transform.position - lastPos;
                 // Normalize and scale the difference vector
                 difference = difference.normalized * scaledDist;
-                float heightCheck = (lastPos + difference).y - 2f;
-                if (heightCheck < WorldGenerator.Instance.m_surfacePos)
+                if((lastPos + difference).y < WorldGenerator.Instance.m_surfacePos)
                 {
                     GameObject newTrailSprite = GetNextAvailableTrailSprite();
                     if (newTrailSprite == null)
@@ -105,14 +104,7 @@ public class TunnelMaker : MonoBehaviour {
                     newTrailSprite.transform.rotation = gameObject.transform.rotation;
                     newTrailSprite.transform.position = lastPos + difference;
                     newTrailSprite.gameObject.transform.SetParent(m_trailParent.transform);
-                    if (gameObject.GetComponent<FoxMovement>().GetVel().x > 0)
-                    {
-                        newTrailSprite.transform.Translate(new Vector3(m_offset.x, m_offset.y, m_offset.z));
-                    }
-                    else
-                    {
-                        newTrailSprite.transform.Translate(new Vector3(-m_offset.x, m_offset.y, m_offset.z));
-                    }
+                    newTrailSprite.transform.Translate(m_offset);
                     spawnedTrailSprites.Add(newTrailSprite);
                     ReOrderTrailSprites();
                 }

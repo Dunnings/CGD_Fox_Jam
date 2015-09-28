@@ -1,9 +1,13 @@
 fileFormatVersion: 2
-guid: 5d12e834fffa4fa489930b9e8742ab3c
-timeCreated: 1443434283
+guid: 4dce181e129c2b5408d1d7bb5c831a97
+timeCreated: 1443441251
 licenseType: Pro
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: shirt_orange
+    21300002: shirt_blue
+    21300004: shirt_red
+    21300006: shirt_green
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -30,15 +34,14 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 16
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
-  allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -49,7 +52,47 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: shirt_orange
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 78
+        width: 37
+        height: 44
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: shirt_blue
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 78
+        width: 37
+        height: 44
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: shirt_red
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 8
+        width: 37
+        height: 44
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: shirt_green
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 8
+        width: 37
+        height: 44
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
   assetBundleName: 

@@ -30,18 +30,17 @@ public class EnemySpawner : MonoBehaviour
 
        
         //if my SpawnCounter is out and the player is far away 
-        if (SpawnCounter <= 0 && 
-            (distance > PlayerToSpawnBuffer || distance < -PlayerToSpawnBuffer))
+        if (SpawnCounter <= 0 && distance >
+            PlayerToSpawnBuffer || distance < -PlayerToSpawnBuffer)
         {
             //and the amount of enemies spawned is less than the max spawn
             if (EnemyManager.GetInstance().SpawnedEnemies.Count != EnemyManager.GetInstance().MaxSpawnAmount)
             {
                 //spawn a farmer
                 SpawnFarmer();
+                //reset counter
+                SpawnCounter = SpawnRate;
             }
-
-            //reset counter
-            SpawnCounter = SpawnRate;
         }
         //else decrement the counter 
         else
@@ -59,7 +58,7 @@ public class EnemySpawner : MonoBehaviour
         //get a random index of farmers
         int index = Random.Range(0, farmers.Count);
 
-        Vector2 spawn = new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos + 0.75f);
+        Vector2 spawn = new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos);
 
         //create a new farmer
         GameObject farmer = Instantiate(farmers[index], spawn, Quaternion.identity) as GameObject;
