@@ -9,6 +9,7 @@ public class EnemySpawner : MonoBehaviour
     public GameObject player;
     public int SpawnRate;
     public int StartSpawnAmount;
+    public float PlayerToSpawnBuffer;
 
     float SpawnCounter = 0;
 
@@ -24,8 +25,13 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     void Update()
     {
-        //if my SpawnCounter is out
-        if (SpawnCounter <= 0)
+        //calc distance between enemy and spawn point
+        float distance = EnemyManager.GetInstance().player.transform.position.x - this.transform.position.x;
+
+       
+        //if my SpawnCounter is out and the player is far away 
+        if (SpawnCounter <= 0 && distance >
+            PlayerToSpawnBuffer || distance < -PlayerToSpawnBuffer)
         {
             //and the amount of enemies spawned is less than the max spawn
             if (EnemyManager.GetInstance().SpawnedEnemies.Count != EnemyManager.GetInstance().MaxSpawnAmount)
