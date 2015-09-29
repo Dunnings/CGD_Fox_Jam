@@ -13,7 +13,7 @@ public class EnemyManager : MonoBehaviour
     public int CurrentSpawned = 0;
     public GameObject player; 
 
-    void Start()
+    void Awake()
     {
         instance = this;
     }

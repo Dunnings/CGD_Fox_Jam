@@ -1,12 +1,9 @@
 fileFormatVersion: 2
-guid: 55d226102f4fdeb43af76160c6267ea7
-timeCreated: 1443432597
+guid: faf8bc5c8d510794388f545aeb8df5b9
+timeCreated: 1443524979
 licenseType: Pro
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: shotgun
-    21300002: shotgun_handle
-    21300004: shotgun_shell
+  fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -33,15 +30,14 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: 16
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
-  allowsAlphaSplitting: 0
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -52,37 +48,7 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites:
-    - name: shotgun
-      rect:
-        serializedVersion: 2
-        x: 12
-        y: 50
-        width: 232
-        height: 50
-      alignment: 9
-      pivot: {x: .782835543, y: .545149863}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: shotgun_handle
-      rect:
-        serializedVersion: 2
-        x: 19
-        y: 7
-        width: 43
-        height: 13
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: shotgun_shell
-      rect:
-        serializedVersion: 2
-        x: 129
-        y: 7
-        width: 54
-        height: 25
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+    sprites: []
   spritePackingTag: 
   userData: 
   assetBundleName: 

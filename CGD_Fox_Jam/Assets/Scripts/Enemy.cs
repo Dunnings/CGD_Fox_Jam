@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour
 	shotgunFarmerPercentage = 0.8f, assualtFarmerPercentage = 0.9f ;
     float shootCountdown;
 
+    int health = 2;
+
 	bool stayHit = false, colHit = false;
 
 	Vector3 poot = Vector3.zero;
@@ -27,6 +29,7 @@ public class Enemy : MonoBehaviour
     public GameObject bullet, m_DeathParticle;
     public List<Sprite> farmerSprites = new List<Sprite>();
     private List<GameObject> m_bullets = new List<GameObject>();
+    List<SpriteRenderer> ChildSprite = new List<SpriteRenderer>(); 
     
     public void Start()
     {
@@ -35,8 +38,9 @@ public class Enemy : MonoBehaviour
         {
             //Debug.Log("Spawning Bullets");
             SpawnBullet();
-        }        
+        }      
     }
+
 
     public void Init()
     {
@@ -223,6 +227,9 @@ public class Enemy : MonoBehaviour
         AwayFrom.Normalize();
 
         poot = (AwayFrom * pushBackForce) * (Time.deltaTime);
+
+        //poot = new Vector3(poot.x, 0.0f, 0.0f);
+
     }
 
     /// <summary>
@@ -252,11 +259,15 @@ public class Enemy : MonoBehaviour
         //player hits enemy
         if (col.tag == "Player")
         {
+            
             KillInstance();
+           
         }
 
         //enemy hits enemy
         if (col.tag == "Enemy") {
+
+            
 			PushBack (col);
 			colHit = true;
 		}      
@@ -264,14 +275,16 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D col)
     {
-		currentCol = col;
+        currentCol = col;
 
-		//enemy hits enemy
-		if (col.tag == "Enemy") {
-			PushBack (col);
-			stayHit = true;
-		}
-	}
+        //enemy hits enemy
+        if (col.tag == "EnemyCollider")
+        {
+            Debug.Log("Enemy");
+            PushBack(col);
+            stayHit = true;
+        }
+    }
 
 	void OnTriggerExit2D(Collider2D col)
 	{
