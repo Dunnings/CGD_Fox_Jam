@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
     };
     public EnemyType type;
 
+	public Animator gunAnim;
+
 	Collider2D currentCol;
 
     public int id;
@@ -29,8 +31,9 @@ public class Enemy : MonoBehaviour
     public GameObject bullet, m_DeathParticle;
     public List<Sprite> farmerSprites = new List<Sprite>();
     private List<GameObject> m_bullets = new List<GameObject>();
-    List<SpriteRenderer> ChildSprite = new List<SpriteRenderer>(); 
-    
+    List<SpriteRenderer> ChildSprite = new List<SpriteRenderer>();
+    int TopBullet = 0;
+
     public void Start()
     {
         //pool bullets, give each enemy 50 bullets
@@ -38,9 +41,10 @@ public class Enemy : MonoBehaviour
         {
             //Debug.Log("Spawning Bullets");
             SpawnBullet();
+
+            TopBullet = m_bullets.Count-1;
         }      
     }
-
 
     public void Init()
     {
@@ -145,7 +149,6 @@ public class Enemy : MonoBehaviour
                     FireBullet(); 
                 break;
                 case(EnemyType.shotgunFarmer):
-                    FireBullet();
                     FireBullet();           
                 break;
 
@@ -182,12 +185,15 @@ public class Enemy : MonoBehaviour
     void SpawnBullet()
     {
         //create bullet game object
-        GameObject newBullet = GameObject.Instantiate(bullet, this.transform.position, Quaternion.identity) as GameObject;        
+        GameObject newBullet = GameObject.Instantiate(bullet, this.transform.position, Quaternion.identity) as GameObject;
 
-        newBullet.transform.parent = this.transform;
+        newBullet.name = "Bullet - " + m_bullets.Count.ToString();
+
+        //newBullet.transform.parent = this.transform;
         newBullet.SetActive(false);
 
         m_bullets.Add(newBullet);
+
     }
 
     /// <summary>
@@ -196,22 +202,35 @@ public class Enemy : MonoBehaviour
     /// </summary>
     void FireBullet()
     {
-        for (int i = 0; i < m_bullets.Count; i++)
+        if(TopBullet < 0)
         {
-            if(m_bullets[i].activeInHierarchy == false)
-            {
-                //Debug.Log("bang");
-
-                //create a direction for the bullet based on player
-                Vector3 direction = CalcBulletDirection();
-                
-                m_bullets[i].SetActive(true);
-                
-                m_bullets[i].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
-                              
-                break;
-            }
+            TopBullet = m_bullets.Count -1;
         }
+
+        if (m_bullets[TopBullet].activeInHierarchy == false)
+        {
+            //make sure velocity is nill
+            m_bullets[TopBullet].GetComponent<Rigidbody2D>().velocity = new Vector3(0.0f, 0.0f, 0.0f);
+            m_bullets[TopBullet].transform.position = this.transform.position;
+
+            //create a direction for the bullet based on player
+            Vector3 direction = CalcBulletDirection();
+
+            if (direction.x < 0)
+            {
+                m_bullets[TopBullet].gameObject.transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
+            }
+
+            m_bullets[TopBullet].SetActive(true);
+
+            m_bullets[TopBullet].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+
+            //decrement top bullet
+            TopBullet--;
+
+            //gunAnim.Play("farmer_shoot");    
+        }       
+          
     }
 
     /// <summary>
@@ -280,7 +299,6 @@ public class Enemy : MonoBehaviour
         //enemy hits enemy
         if (col.tag == "EnemyCollider")
         {
-            Debug.Log("Enemy");
             PushBack(col);
             stayHit = true;
         }
