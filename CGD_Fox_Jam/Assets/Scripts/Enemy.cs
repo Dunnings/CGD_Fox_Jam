@@ -199,7 +199,7 @@ public class Enemy : MonoBehaviour
                 m_bullets[i].SetActive(true);
 
 
-                m_bullets[i].GetComponent<BulletProperties>().SetVelocity(direction, bulletSpeed);
+//                m_bullets[i].GetComponent<BulletProperties>().SetVelocity(direction, bulletSpeed);
                 //m_bullets[i].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
                               
                 break;
