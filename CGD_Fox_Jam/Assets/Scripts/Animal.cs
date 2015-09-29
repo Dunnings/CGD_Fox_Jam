@@ -22,6 +22,8 @@ public class Animal : MonoBehaviour
     public float chickhenPercentage;
     public float pushBackForce = 1.0f;
 
+    public GameObject m_deathParticles;
+
     public List<Sprite> animalSprites = new List<Sprite>();
 
     private Vector2 wayPoint = new Vector2();
@@ -103,6 +105,14 @@ public class Animal : MonoBehaviour
     private void KillInstance()
     {
         AnimalManager.GetInstance().RemoveSpawnedAnimal(id);
+        GameObject deathParticles = Instantiate(m_deathParticles);
+
+        Vector3 pos = transform.position;
+        pos.y = WorldGenerator.Instance.m_surfacePos;
+        deathParticles.transform.position = pos;
+        Destroy(deathParticles, 4f);
+        FindObjectOfType<SFXManager>().PlayDeathSound();
+        FindObjectOfType<Fox>().SmallReward();
         Destroy(gameObject);
     }
 

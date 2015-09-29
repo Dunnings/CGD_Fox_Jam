@@ -32,7 +32,7 @@ public class Fox : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        DecreaseHunger(2f * Time.deltaTime);
+        DecreaseHunger(5f * Time.deltaTime);
         m_healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(m_healthBarStartWidth * (m_hunger / m_maxHunger), 0f);
 
         if(transform.position.y > WorldGenerator.Instance.m_surfacePos)
@@ -142,9 +142,14 @@ public class Fox : MonoBehaviour {
         }
     }
 
-    public void Reward()
+    public void SmallReward()
     {
         float rewardAmount = 5f;
+        m_hunger = Mathf.Min(m_maxHunger, m_hunger + rewardAmount);
+    }
+    public void Reward()
+    {
+        float rewardAmount = 10f;
         m_hunger = Mathf.Min(m_maxHunger, m_hunger + rewardAmount);
     }
 }

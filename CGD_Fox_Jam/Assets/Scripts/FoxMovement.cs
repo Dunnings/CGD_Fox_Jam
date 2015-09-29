@@ -6,7 +6,7 @@ public class FoxMovement : MonoBehaviour
     public GameObject m_particles;
 
     //Acceleration and Velocity
-	Vector3 acc, vel;
+	public Vector3 acc, vel;
     //Other variables
 	public float mass, addForce, gravForce, maxVel, breachHeight;
     //If the fox has breached and if it breached last frame
