@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
     };
     public EnemyType type;
 
+	public Animator gunAnim;
+
 	Collider2D currentCol;
 
     public int id;
@@ -216,7 +218,7 @@ public class Enemy : MonoBehaviour
                 
                 m_bullets[i].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
 
-               
+				gunAnim.Play("farmer_shoot");
                               
                 break;
             }
