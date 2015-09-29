@@ -37,17 +37,17 @@ public class Animal : MonoBehaviour
         if (thisRand > wormPercentage)
         {
             this.type = AnimalType.chickhen;
-            this.gameObject.GetComponent<SpriteRenderer>().sprite = animalSprites[2];
+            //this.gameObject.GetComponent<SpriteRenderer>().sprite = animalSprites[2];
         }
         else if (thisRand > rabbitPercentage)
         {
             this.type = AnimalType.rabbit;
-            this.gameObject.GetComponent<SpriteRenderer>().sprite = animalSprites[1];
+            //this.gameObject.GetComponent<SpriteRenderer>().sprite = animalSprites[1];
         }
         else
         {
             this.type = AnimalType.worm;
-            this.gameObject.GetComponent<SpriteRenderer>().sprite = animalSprites[0];
+            //this.gameObject.GetComponent<SpriteRenderer>().sprite = animalSprites[0];
         }
     }
 
@@ -64,6 +64,8 @@ public class Animal : MonoBehaviour
         {
             Vector3 vel = new Vector3(1, 0, 0);
             gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
+            gameObject.transform.localScale = new Vector3(-0.2f, 0.2f, 0.2f);
+            
 
         }
         //else increment down on the x 
@@ -71,6 +73,8 @@ public class Animal : MonoBehaviour
         {
             Vector3 vel = new Vector3(-1, 0, 0);
             gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
+            gameObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            
         }
     }
 
