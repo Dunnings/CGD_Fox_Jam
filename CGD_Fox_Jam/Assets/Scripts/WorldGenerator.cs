@@ -115,7 +115,7 @@ public class WorldGenerator : MonoBehaviour {
             GameObject newCloud = Instantiate(m_cloud);
             m_timeLastSpawnedCloud = Time.time;
             m_cloudTimeInterval = Random.Range(2f, 4f);
-            newCloud.transform.position = new Vector3(Random.Range(-(WorldGenerator.Instance.m_width / 2f), WorldGenerator.Instance.m_width / 2f), Random.Range(WorldGenerator.Instance.m_surfacePos + 3f, WorldGenerator.Instance.m_surfacePos + 10f), 0f);
+            newCloud.transform.position = new Vector3(Random.Range(-(WorldGenerator.Instance.m_width / 2f), WorldGenerator.Instance.m_width / 2f), Random.Range(WorldGenerator.Instance.m_surfacePos + 3f, WorldGenerator.Instance.m_surfacePos + 5f), 0f);
             m_pooledClouds.Add(newCloud);
         }
     }
@@ -134,10 +134,13 @@ public class WorldGenerator : MonoBehaviour {
         if (Time.time - m_timeLastSpawnedCloud > m_cloudTimeInterval)
         {
             GameObject newCloud = GetNextCloud();
-            newCloud.SetActive(true);
-            m_timeLastSpawnedCloud = Time.time;
-            m_cloudTimeInterval = Random.Range(2f, 4f);
-            newCloud.transform.position = new Vector3(WorldGenerator.Instance.m_width / 2f, Random.Range(WorldGenerator.Instance.m_surfacePos + 3f, WorldGenerator.Instance.m_surfacePos + 10f), 0f);
+            if (newCloud != null)
+            {
+                newCloud.SetActive(true);
+                m_timeLastSpawnedCloud = Time.time;
+                m_cloudTimeInterval = Random.Range(2f, 4f);
+                newCloud.transform.position = new Vector3(WorldGenerator.Instance.m_width / 2f, Random.Range(WorldGenerator.Instance.m_surfacePos + 3f, WorldGenerator.Instance.m_surfacePos + 5f), 0f);
+            }
         }
     }
 

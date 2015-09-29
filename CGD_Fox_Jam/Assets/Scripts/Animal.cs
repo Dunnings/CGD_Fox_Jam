@@ -104,7 +104,7 @@ public class Animal : MonoBehaviour
 
     private void KillInstance()
     {
-        AnimalManager.GetInstance().RemoveSpawnedAnimal(id);
+        AnimalManager.instance.RemoveSpawnedAnimal(id);
         GameObject deathParticles = Instantiate(m_deathParticles);
 
         Vector3 pos = transform.position;
