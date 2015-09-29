@@ -25,12 +25,20 @@ public class Enemy : MonoBehaviour
 	Vector3 poot = Vector3.zero;
 
     public GameObject bullet, m_DeathParticle;
-
     public List<Sprite> farmerSprites = new List<Sprite>();
+    private List<GameObject> m_bullets = new List<GameObject>();
+    
 
     public void Start()
     {
-       //create a random type based on percent weights
+        //pool bullets, give each enemy 50 bullets
+        for (int i = 0; i < 10; i++)
+        {
+            Debug.Log("Spawning Bullets");
+            SpawnBullet();
+        }
+
+        //create a random type based on percent weights
         float thisRand = Random.Range(0.0f, 1.0f);
 
         //generate farmer type
@@ -53,8 +61,10 @@ public class Enemy : MonoBehaviour
             shootCoolDown = 0.5f;
         }
 
+        
+
         //create a rand buffer distance 
-        bufferDistance =  Random.Range(1, bufferDistance);
+        bufferDistance = Random.Range(1, bufferDistance);
 
         //set the shoot count down to the shoot coolOff
         shootCountdown = shootCoolDown;
@@ -123,15 +133,15 @@ public class Enemy : MonoBehaviour
             {
                 //different enemy types different firing types
                 case(EnemyType.rifleFarmer):
-                    SpawnBullet(); 
+                    FireBullet(); 
                 break;
                 case(EnemyType.shotgunFarmer):
-                    SpawnBullet();
-                    SpawnBullet();           
+                    FireBullet();
+                    FireBullet();           
                 break;
 
                 case (EnemyType.assaultFarmer):
-                    SpawnBullet(); 
+                    FireBullet(); 
                 break;
             }
 
@@ -157,15 +167,81 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// spawns a bullet
+    /// spawns a bullet and stores it in a list 
+    /// of pooled bullets attached to the enemy
     /// </summary>
     void SpawnBullet()
     {
         //create bullet game object
-        GameObject newBullet = GameObject.Instantiate(bullet, this.transform.position, Quaternion.identity) as GameObject;
-        //create a direction for the bullet based on player
-        Vector3 direction = CalcBulletDirection();
-        newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed; 
+        GameObject newBullet = GameObject.Instantiate(bullet, this.transform.position, Quaternion.identity) as GameObject;        
+
+        newBullet.transform.parent = this.transform;
+        newBullet.SetActive(false);
+
+        m_bullets.Add(newBullet);
+    }
+
+    /// <summary>
+    /// Fires a pooled GameObject Bullet from list of GameObjects attached 
+    /// to the player
+    /// </summary>
+    void FireBullet()
+    {
+        for (int i = 0; i < m_bullets.Count; i++)
+        {
+            if(m_bullets[i].activeInHierarchy == false)
+            {
+                Debug.Log("bang");
+
+                //create a direction for the bullet based on player
+                Vector3 direction = CalcBulletDirection();
+                
+                m_bullets[i].SetActive(true);
+
+
+                m_bullets[i].GetComponent<BulletProperties>().SetVelocity(direction, bulletSpeed);
+                //m_bullets[i].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+                              
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Applies a push back force between two objects
+    /// </summary>
+    /// <param name="col"></param>
+    void PushBack(Collider2D col)
+    {
+        Vector3 collisionPos = col.gameObject.GetComponent<Rigidbody2D>().transform.position;
+
+        Vector3 AwayFrom = this.gameObject.GetComponent<Rigidbody2D>().transform.position - collisionPos;
+
+        AwayFrom.Normalize();
+
+        poot = (AwayFrom * pushBackForce) * (Time.deltaTime);
+    }
+
+    /// <summary>
+    /// set instance of game object to be inactive
+    /// </summary>
+    private void KillInstance()
+    {
+        EnemyManager.GetInstance().player.GetComponent<Fox>().Reward();
+
+        EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
+        GameObject deathParticles = Instantiate(m_DeathParticle);
+
+        Vector3 pos = transform.position;
+        pos.y = WorldGenerator.Instance.m_surfacePos;
+        deathParticles.transform.position = pos;
+        Destroy(deathParticles, 6f);
+        FindObjectOfType<SFXManager>().PlayDeathSound();
+
+        //decrease active amount 
+        EnemyManager.GetInstance().ActiveEnemies--;
+        //don't destory anymore due to object pooling
+        //Destroy(gameObject);        
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -192,7 +268,6 @@ public class Enemy : MonoBehaviour
 		//enemy hits enemy
 		if (col.tag == "Enemy") {
 			PushBack (col);
-			Debug.Log ("Cunt");
 			stayHit = true;
 		}
 	}
@@ -201,50 +276,5 @@ public class Enemy : MonoBehaviour
 	{
 		colHit = false;
 		stayHit = false;
-	}
-	
-
-    /// <summary>
-    /// Applies a push back force between two objects
-    /// </summary>
-    /// <param name="col"></param>
-    void PushBack(Collider2D col)
-    {
-        Vector3 collisionPos = col.gameObject.GetComponent<Rigidbody2D>().transform.position;
-
-		Vector3 AwayFrom = this.gameObject.GetComponent<Rigidbody2D>().transform.position - collisionPos;
-
-        AwayFrom.Normalize();
-
-        poot = (AwayFrom * pushBackForce) * (Time.deltaTime) ;
-    }
-
-    /// <summary>
-    /// destroy instance and remove from appropriate manager
-   /// </summary>
-    private void KillInstance()
-    {
-        EnemyManager.GetInstance().player.GetComponent<Fox>().Reward();
-
-        EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
-        GameObject deathParticles = Instantiate(m_DeathParticle);
-        Vector3 pos = transform.position;
-        pos.y = WorldGenerator.Instance.m_surfacePos;
-        deathParticles.transform.position = pos;
-        Destroy(deathParticles, 6f);
-        FindObjectOfType<SFXManager>().PlayDeathSound();
-        Destroy(gameObject);        
-    }
-
-	void LateUpdate ()
-	{
-		/*if (stayHit)
-		{
-			stayHit = false;
-		}
-		if (colHit)
-		{
-			colHit = false;
-		}*/
-	}
+	}	
 }
