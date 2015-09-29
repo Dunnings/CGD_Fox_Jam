@@ -108,6 +108,9 @@ public class Animal : MonoBehaviour
 
     private void KillInstance()
     {
+        GameManager.instance.KillCount++;
+
+
         AnimalManager.instance.RemoveSpawnedAnimal(id);
         GameObject deathParticles = Instantiate(m_deathParticles);
 

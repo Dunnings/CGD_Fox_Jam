@@ -15,8 +15,8 @@ public class AnimalSpawner : MonoBehaviour
     void Start()
     {
         AnimalManager.instance.MaxSpawnAmount += SpawnAmount;
-
-        for(int i = 0; i < 50; i++)
+            
+        for (int i = 0; i < SpawnAmount; i++)
         {
             SpawnAnimal();
         }
@@ -35,20 +35,20 @@ public class AnimalSpawner : MonoBehaviour
             if (AnimalManager.instance.CurrentSpawned < AnimalManager.instance.MaxSpawnAmount &&
                  AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].activeInHierarchy == false)
             {
-                Vector2 spawn;
-                if (player.transform.position.x < 0.0f)
-                {
-                     spawn = new Vector2(Random.Range(15.0f, WorldGenerator.Instance.m_width / 2f),
-                        WorldGenerator.Instance.m_surfacePos + 0.25f);
-                }
-                else
-                {
-                     spawn = new Vector2(Random.Range(0 - WorldGenerator.Instance.m_width / 2f , - 15.0f),
-                        WorldGenerator.Instance.m_surfacePos + 0.25f);
-                }
+                //Vector2 spawn;
+                //if (player.transform.position.x < 0.0f)
+                //{
+                //     spawn = new Vector2(Random.Range(10.0f, WorldGenerator.Instance.m_width / 2f),
+                //        WorldGenerator.Instance.m_surfacePos + 0.25f);
+                //}
+                //else
+                //{
+                //    spawn = new Vector2(Random.Range(0 - WorldGenerator.Instance.m_width / 2f, -10.0f),
+                //        WorldGenerator.Instance.m_surfacePos + 0.25f);
+                //}
 
 
-                AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].transform.position = spawn;
+                //AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].transform.position = spawn;
 
                 //re randomize enemy
                 AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].GetComponent<Animal>().Init();

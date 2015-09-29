@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public static EnemySpawner instance;
     //list stores all enemies
     public GameObject farmer;
     public GameObject player;
@@ -11,7 +12,12 @@ public class EnemySpawner : MonoBehaviour
     public int StartSpawnAmount;
     public float PlayerToSpawnBuffer;
 
-    float SpawnCounter = 0;      
+    float SpawnCounter = 0;   
+   
+    void Awake ()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -19,7 +25,7 @@ public class EnemySpawner : MonoBehaviour
 
         EnemyManager.instance.player = player;
 
-        for (int i = 0; i < StartSpawnAmount; i++)
+        for (int i = 0; i < 100; i++)
         {
             SpawnFarmer();
         }
@@ -30,6 +36,11 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     void Update()
     {
+        if(EnemyManager.instance.MaxSpawnAmount == 100)
+        {
+            EnemyManager.instance.MaxSpawnAmount = 100;
+        }
+
         //calc distance between enemy and spawn point
         float distance = EnemyManager.instance.player.transform.position.x - this.transform.position.x;
        
@@ -58,13 +69,17 @@ public class EnemySpawner : MonoBehaviour
             }
 
             //reset counter
+            
             SpawnCounter = SpawnRate;
         }
         //else decrement the counter 
         else
         {
+            
             SpawnCounter -= Time.deltaTime;
         }
+
+        
     }
 
     /// <summary>
@@ -99,5 +114,33 @@ public class EnemySpawner : MonoBehaviour
 
         //turn of GameObject
         newFarmer.SetActive(false);
+    }
+
+    public void UpdateSpawning()
+    {
+        //take 10 seconds off spawn time
+        if (SpawnRate > 2.0f)
+        {
+            SpawnRate = SpawnRate - 1.0f;
+            if (SpawnRate < 2.0f)
+            {
+                SpawnRate = 2.0f;
+            }
+        }
+
+        //double amount of players to spawn
+        if(StartSpawnAmount < 100)
+        {
+            
+            StartSpawnAmount = + 5;
+            EnemyManager.instance.MaxSpawnAmount += StartSpawnAmount;
+
+            if(StartSpawnAmount > 100)
+            {
+                StartSpawnAmount = 100;
+                EnemyManager.instance.MaxSpawnAmount = StartSpawnAmount;
+            }
+        }
+
     }
 }

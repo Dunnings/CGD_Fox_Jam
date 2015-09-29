@@ -274,6 +274,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void KillInstance()
     {
+        GameManager.instance.KillCount++;
+
         EnemyManager.instance.player.GetComponent<Fox>().Reward();        
         GameObject deathParticles = Instantiate(m_DeathParticle);
 
