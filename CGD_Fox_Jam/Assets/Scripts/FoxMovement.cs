@@ -50,6 +50,7 @@ public class FoxMovement : MonoBehaviour
             //Toggel animation state
             m_animator.SetBool("burrowing", true);
             m_animator.SetBool("flying", false);
+            m_particles.SetActive(true);
         }
         else if(breached && !lastFrameBreached)
         {
@@ -58,6 +59,7 @@ public class FoxMovement : MonoBehaviour
             //Toggel animation state
             m_animator.SetBool("flying", true);
             m_animator.SetBool("burrowing", false);
+            m_particles.SetActive(false);
         }
 
         //The proposed new position
