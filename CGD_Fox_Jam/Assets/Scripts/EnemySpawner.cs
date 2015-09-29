@@ -7,7 +7,7 @@ public class EnemySpawner : MonoBehaviour
     //list stores all enemies
     public List<GameObject> farmers = new List<GameObject>();
     public GameObject player;
-    public int SpawnRate;
+    public float SpawnRate;
     public int StartSpawnAmount;
     public float PlayerToSpawnBuffer;
 

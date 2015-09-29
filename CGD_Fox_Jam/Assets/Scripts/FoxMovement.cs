@@ -6,7 +6,7 @@ public class FoxMovement : MonoBehaviour
     public GameObject m_particles;
 
     //Acceleration and Velocity
-	Vector3 acc, vel;
+	public Vector3 acc, vel;
     //Other variables
 	public float mass, addForce, gravForce, maxVel, breachHeight;
     //If the fox has breached and if it breached last frame
@@ -205,7 +205,7 @@ public class FoxMovement : MonoBehaviour
             m_particles.transform.rotation = Quaternion.AngleAxis(rot_z + 90, Vector3.forward) * Quaternion.Euler(180, 0, 270);
             gameObject.transform.rotation = Quaternion.AngleAxis(rot_z + 270, Vector3.forward) * Quaternion.Euler(180, 0, 270);
         }
-        else
+        else if (diff.x > 0)
         {
             m_particles.transform.rotation = Quaternion.AngleAxis(rot_z + 90, Vector3.forward) * Quaternion.Euler(180, 0, 270);
             gameObject.transform.rotation = Quaternion.AngleAxis(rot_z + 270, Vector3.forward) * Quaternion.Euler(0, 180, 270);

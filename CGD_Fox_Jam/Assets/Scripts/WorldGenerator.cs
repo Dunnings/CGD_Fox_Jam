@@ -6,6 +6,9 @@ public class WorldGenerator : MonoBehaviour {
     public static WorldGenerator Instance;
 
     public GameObject m_bedrockPrefab;
+    public GameObject m_cloud;
+    float m_timeLastSpawnedCloud;
+    float m_cloudTimeInterval = 3f;
 
     public GameObject m_rockPrefab;
     public List<Sprite> m_rockSpriteList;
@@ -29,8 +32,13 @@ public class WorldGenerator : MonoBehaviour {
     private List<GameObject> m_allSurfaceTiles = new List<GameObject>();
     private List<GameObject> m_allRocks = new List<GameObject>();
     private List<GameObject> m_allWheat = new List<GameObject>();
+    List<GameObject> m_pooledClouds = new List<GameObject>();
 
     public Color m_dirtColor = Color.white;
+
+    public bool m_respawnRocks = false;
+    private float m_timeAtLastRockSpawn = 0f;
+    private float m_rockDelaySpawn = 3f;
 
     void Awake()
     {
@@ -58,6 +66,7 @@ public class WorldGenerator : MonoBehaviour {
                 GameObject newObj = Instantiate<GameObject>(m_bedrockPrefab);
                 newObj.transform.position = new Vector3(i, m_surfacePos - m_depth - (x * m_tileWidth), 0f);
                 newObj.gameObject.transform.SetParent(gameObject.transform);
+
             }
         }
 
@@ -99,12 +108,41 @@ public class WorldGenerator : MonoBehaviour {
         //{
         //    SpawnRandomWheat((0f - (m_width/2f)) + ((m_width / m_wheatCount) * i));
         //}
+        m_respawnRocks = true;
+
+        for (int i = 0; i < 40; i++)
+        {
+            GameObject newCloud = Instantiate(m_cloud);
+            m_timeLastSpawnedCloud = Time.time;
+            m_cloudTimeInterval = Random.Range(2f, 4f);
+            newCloud.transform.position = new Vector3(Random.Range(-(WorldGenerator.Instance.m_width / 2f), WorldGenerator.Instance.m_width / 2f), Random.Range(WorldGenerator.Instance.m_surfacePos + 3f, WorldGenerator.Instance.m_surfacePos + 5f), 0f);
+            m_pooledClouds.Add(newCloud);
+        }
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (m_respawnRocks && m_allRocks.Count < m_rockCount)
+        {
+            if (Time.time - m_timeAtLastRockSpawn > m_rockDelaySpawn)
+            {
+                SpawnRandomRock();
+            }
+        }
+
+        if (Time.time - m_timeLastSpawnedCloud > m_cloudTimeInterval)
+        {
+            GameObject newCloud = GetNextCloud();
+            if (newCloud != null)
+            {
+                newCloud.SetActive(true);
+                m_timeLastSpawnedCloud = Time.time;
+                m_cloudTimeInterval = Random.Range(2f, 4f);
+                newCloud.transform.position = new Vector3(WorldGenerator.Instance.m_width / 2f, Random.Range(WorldGenerator.Instance.m_surfacePos + 3f, WorldGenerator.Instance.m_surfacePos + 5f), 0f);
+            }
+        }
+    }
 
     private void SpawnRandomRock()
     {
@@ -115,6 +153,7 @@ public class WorldGenerator : MonoBehaviour {
         newRock.transform.position = newPos;
         newRock.transform.SetParent(gameObject.transform);
         m_allRocks.Add(newRock);
+        m_timeAtLastRockSpawn = Time.time;
     }
 
     public void SpawnRandomWheat(float xPos)
@@ -128,5 +167,16 @@ public class WorldGenerator : MonoBehaviour {
         newWheat.transform.position = newPos;
         newWheat.transform.SetParent(gameObject.transform);
         m_allWheat.Add(newWheat);
+    }
+
+    public GameObject GetNextCloud()
+    {
+        for (int i = 0; i < m_pooledClouds.Count; i++)
+        {
+            if (!m_pooledClouds[i].activeSelf) {
+                return m_pooledClouds[i];
+            }
+        }
+        return null;
     }
 }
