@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class EnemySpawner : MonoBehaviour
 {
     //list stores all enemies
-    public List<GameObject> farmers = new List<GameObject>();
+    public GameObject farmer;
     public GameObject player;
     public float SpawnRate;
     public int StartSpawnAmount;
@@ -76,28 +76,28 @@ public class EnemySpawner : MonoBehaviour
         Vector2 spawn = new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos + 0.75f);
 
         //create a new farmer
-        GameObject farmer = Instantiate(farmers[0], spawn, Quaternion.identity) as GameObject;
+        GameObject newFarmer = Instantiate(farmer, spawn, Quaternion.identity) as GameObject;
         
         //temp store and increment the unique ID
         int myID = EnemyManager.instance.id;
         EnemyManager.instance.id++;
 
         //add farmer to list in EnemyManager
-        EnemyManager.instance.SpawnedEnemies.Add(farmer);
+        EnemyManager.instance.SpawnedEnemies.Add(newFarmer);
 
         //increment amount of Inactive enemies
         EnemyManager.instance.InactiveEnemies = EnemyManager.instance.SpawnedEnemies.Count;
 
         //get the enemy component and attach ID 
-        farmer.GetComponent<Enemy>().id = myID;
+        newFarmer.GetComponent<Enemy>().id = myID;
 
         //give farmer a name 
-        farmer.name = "Farmer " + (EnemyManager.instance.SpawnedEnemies.Count - 1).ToString();
+        newFarmer.name = "Farmer " + (EnemyManager.instance.SpawnedEnemies.Count - 1).ToString();
 
         //set the farmers parent to the spawner = nice hierarchy 
-        farmer.transform.parent = EnemyManager.instance.gameObject.transform;
+        newFarmer.transform.parent = EnemyManager.instance.gameObject.transform;
 
         //turn of GameObject
-        farmer.SetActive(false);
+        newFarmer.SetActive(false);
     }
 }

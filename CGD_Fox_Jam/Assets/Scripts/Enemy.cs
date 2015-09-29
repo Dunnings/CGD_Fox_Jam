@@ -29,12 +29,14 @@ public class Enemy : MonoBehaviour
 	Vector3 poot = Vector3.zero;
 
     public GameObject bullet, m_DeathParticle;
-    public List<Sprite> farmerSprites = new List<Sprite>();
     private List<GameObject> m_bullets = new List<GameObject>();
-    List<SpriteRenderer> ChildSprite = new List<SpriteRenderer>();
+    public List<Sprite> FarmerShirts = new List<Sprite>();
+
+    private GameObject m_shirt;
+
     int TopBullet = 0;
 
-    public void Start()
+    public void Awake()
     {
         //pool bullets, give each enemy 50 bullets
         for (int i = 0; i < 10; i++)
@@ -43,11 +45,24 @@ public class Enemy : MonoBehaviour
             SpawnBullet();
 
             TopBullet = m_bullets.Count-1;
-        }      
+        }    
+  
+        //get the shirt component of farmer
+        foreach(Transform child in transform)
+        {
+            foreach (Transform innerChild in child)
+            {
+                if (innerChild.gameObject.tag == "FarmerShirt")
+                {
+                    m_shirt = innerChild.gameObject;
+                }
+            }
+        }
     }
 
     public void Init()
     {
+        
         //create a random type based on percent weights
         float thisRand = Random.Range(0.0f, 1.0f);
 
@@ -55,18 +70,21 @@ public class Enemy : MonoBehaviour
         if (thisRand > assualtFarmerPercentage)
         {
             this.type = EnemyType.assaultFarmer;
+            m_shirt.GetComponent<SpriteRenderer>().sprite = FarmerShirts[2];
             //this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[2];
             shootCoolDown = 0.1f;
         }
         else if (thisRand > shotgunFarmerPercentage)
         {
             this.type = EnemyType.shotgunFarmer;
+            m_shirt.GetComponent<SpriteRenderer>().sprite = FarmerShirts[1];
             //this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[1];
             shootCoolDown = 0.5f;
         }
         else
         {
             this.type = EnemyType.rifleFarmer;
+            m_shirt.GetComponent<SpriteRenderer>().sprite = FarmerShirts[0];
             //this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[0];
             shootCoolDown = 0.5f;
         }
