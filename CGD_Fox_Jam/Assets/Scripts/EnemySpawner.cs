@@ -64,7 +64,6 @@ public class EnemySpawner : MonoBehaviour
         else
         {
             SpawnCounter -= Time.deltaTime;
-            //Debug.Log(SpawnCounter);
         }
     }
 

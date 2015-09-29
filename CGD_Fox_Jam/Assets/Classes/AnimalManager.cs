@@ -13,9 +13,18 @@ public class AnimalManager : MonoBehaviour
     public int InactiveAnimals = 0;
     public int id = 0;
 
-    void Start()
+    void Awake()
     {
-        instance = this; 
+        instance = this;
+    }
+
+    void Update()
+    {
+        //make sure Inactive 
+        if (InactiveAnimals <= 0)
+        {
+            InactiveAnimals = SpawnedAnimals.Count;
+        }
     }
 
     /// <summary>
@@ -23,17 +32,10 @@ public class AnimalManager : MonoBehaviour
     /// </summary>
     public void RemoveSpawnedAnimal(int id)
     {
-        //remove instance from the list
-        for (int i = 0; i < SpawnedAnimals.Count; i++)
-        {
-            if (SpawnedAnimals[i].Key == id)
-            {
-                //set farmer at position inactive
-                SpawnedAnimals[id].SetActive(false);
+        //set animals at position inactive
+        SpawnedAnimals[id].SetActive(false);
 
-                CurrentSpawned--;
-            }
-        }
+        CurrentSpawned--;
     }
 
 }

@@ -259,11 +259,9 @@ public class Enemy : MonoBehaviour
         //player hits enemy
         if (col.tag == "Player")
         {
-            health--;
-            if (health == 0)
-            {
-                KillInstance();
-            }
+            
+            KillInstance();
+           
         }
 
         //enemy hits enemy

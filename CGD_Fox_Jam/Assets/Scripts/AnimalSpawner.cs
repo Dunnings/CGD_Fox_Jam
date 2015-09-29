@@ -13,7 +13,12 @@ public class AnimalSpawner : MonoBehaviour
 
     void Start()
     {
-        AnimalManager.instance = MaxSpawnAmount += SpawnAmount;
+        AnimalManager.instance.MaxSpawnAmount += SpawnAmount;
+
+        for(int i = 0; i < 50; i++)
+        {
+            SpawnAnimal();
+        }
     }
 
     /// <summary>
@@ -25,10 +30,20 @@ public class AnimalSpawner : MonoBehaviour
         if (SpawnCounter <= 0)
         {
             //and the amount of enemies spawned is less than the max spawn
-            if (AnimalManager.GetInstance().SpawnedAnimals.Count != AnimalManager.GetInstance().MaxSpawnAmount)
+            //and the amount of enemies spawned is less than the max spawn and the enemy is not already active
+            if (AnimalManager.instance.CurrentSpawned < AnimalManager.instance.MaxSpawnAmount &&
+                 AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].activeInHierarchy == false)
             {
-                //spawn a farmer
-                SpawnAnimal();
+                //re randomize enemy
+                AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].GetComponent<Animal>().Init();
+
+                AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].SetActive(true);
+
+                //Decrement active enemies
+                AnimalManager.instance.InactiveAnimals--;
+
+                AnimalManager.instance.CurrentSpawned++;
+
                 //reset counter
                 SpawnCounter = SpawnRate;
             }
@@ -37,7 +52,6 @@ public class AnimalSpawner : MonoBehaviour
         else
         {
             SpawnCounter -= Time.deltaTime;
-            //Debug.Log(SpawnCounter);
         }
     }
 
@@ -52,23 +66,25 @@ public class AnimalSpawner : MonoBehaviour
         //create a new farmer
         GameObject newAnimal = Instantiate(animal, spawn, Quaternion.identity) as GameObject;
 
-        //create key value pair instance 
-        KeyValuePair<int, GameObject> instance = new KeyValuePair<int, GameObject>(AnimalManager.GetInstance().id, newAnimal);
-
         //temp store and increment the unique ID
-        int myID = AnimalManager.GetInstance().id;
-        AnimalManager.GetInstance().id++;
+        int myID = AnimalManager.instance.id;
+        AnimalManager.instance.id++;
 
         //add animal to list in EnemyManager
-        AnimalManager.GetInstance().SpawnedAnimals.Add(instance);
+        AnimalManager.instance.SpawnedAnimals.Add(newAnimal);
+
+        //increment amount of Inactive enemies
+        AnimalManager.instance.InactiveAnimals = AnimalManager.instance.SpawnedAnimals.Count;
 
         //get the animal component and attach ID 
         newAnimal.GetComponent<Animal>().id = myID;
 
         //give animal a name 
-        newAnimal.name = "Animal " + (AnimalManager.GetInstance().SpawnedAnimals.Count - 1).ToString();
+        newAnimal.name = "Animal " + (AnimalManager.instance.SpawnedAnimals.Count - 1).ToString();
 
         //set the animals parent to the spawner = nice hierarchy 
-        newAnimal.transform.parent = this.transform;
+        newAnimal.transform.parent = AnimalManager.instance.transform;
+
+        newAnimal.gameObject.SetActive(false);
     }
 }
