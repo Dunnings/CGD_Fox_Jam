@@ -184,7 +184,7 @@ public class Enemy : MonoBehaviour
         //create bullet game object
         GameObject newBullet = GameObject.Instantiate(bullet, this.transform.position, Quaternion.identity) as GameObject;        
 
-        newBullet.transform.parent = this.transform;
+        //newBullet.transform.parent = this.transform;
         newBullet.SetActive(false);
 
         m_bullets.Add(newBullet);
@@ -201,13 +201,22 @@ public class Enemy : MonoBehaviour
             if(m_bullets[i].activeInHierarchy == false)
             {
                 //Debug.Log("bang");
+                m_bullets[i].transform.position = this.transform.position;
 
                 //create a direction for the bullet based on player
                 Vector3 direction = CalcBulletDirection();
+
+                if (direction.x < 0)
+                {
+                    m_bullets[i].gameObject.transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
+                }
+             
                 
                 m_bullets[i].SetActive(true);
                 
                 m_bullets[i].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+
+               
                               
                 break;
             }
