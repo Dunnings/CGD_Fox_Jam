@@ -13,7 +13,7 @@ public class AnimalSpawner : MonoBehaviour
 
     void Start()
     {
-        AnimalManager.GetInstance().MaxSpawnAmount += SpawnAmount;
+        AnimalManager.instance = MaxSpawnAmount += SpawnAmount;
     }
 
     /// <summary>
