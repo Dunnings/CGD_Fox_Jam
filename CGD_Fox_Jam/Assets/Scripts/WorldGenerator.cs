@@ -32,6 +32,7 @@ public class WorldGenerator : MonoBehaviour {
     private List<GameObject> m_allSurfaceTiles = new List<GameObject>();
     private List<GameObject> m_allRocks = new List<GameObject>();
     private List<GameObject> m_allWheat = new List<GameObject>();
+    List<GameObject> m_pooledClouds = new List<GameObject>();
 
     public Color m_dirtColor = Color.white;
 
@@ -65,6 +66,7 @@ public class WorldGenerator : MonoBehaviour {
                 GameObject newObj = Instantiate<GameObject>(m_bedrockPrefab);
                 newObj.transform.position = new Vector3(i, m_surfacePos - m_depth - (x * m_tileWidth), 0f);
                 newObj.gameObject.transform.SetParent(gameObject.transform);
+
             }
         }
 
@@ -114,7 +116,7 @@ public class WorldGenerator : MonoBehaviour {
             m_timeLastSpawnedCloud = Time.time;
             m_cloudTimeInterval = Random.Range(2f, 4f);
             newCloud.transform.position = new Vector3(Random.Range(-(WorldGenerator.Instance.m_width / 2f), WorldGenerator.Instance.m_width / 2f), Random.Range(WorldGenerator.Instance.m_surfacePos + 3f, WorldGenerator.Instance.m_surfacePos + 10f), 0f);
-
+            m_pooledClouds.Add(newCloud);
         }
     }
 
@@ -131,11 +133,11 @@ public class WorldGenerator : MonoBehaviour {
 
         if (Time.time - m_timeLastSpawnedCloud > m_cloudTimeInterval)
         {
-            GameObject newCloud = Instantiate(m_cloud);
+            GameObject newCloud = GetNextCloud();
+            newCloud.SetActive(true);
             m_timeLastSpawnedCloud = Time.time;
             m_cloudTimeInterval = Random.Range(2f, 4f);
             newCloud.transform.position = new Vector3(WorldGenerator.Instance.m_width / 2f, Random.Range(WorldGenerator.Instance.m_surfacePos + 3f, WorldGenerator.Instance.m_surfacePos + 10f), 0f);
-
         }
     }
 
@@ -162,5 +164,16 @@ public class WorldGenerator : MonoBehaviour {
         newWheat.transform.position = newPos;
         newWheat.transform.SetParent(gameObject.transform);
         m_allWheat.Add(newWheat);
+    }
+
+    public GameObject GetNextCloud()
+    {
+        for (int i = 0; i < m_pooledClouds.Count; i++)
+        {
+            if (!m_pooledClouds[i].activeSelf) {
+                return m_pooledClouds[i];
+            }
+        }
+        return null;
     }
 }
