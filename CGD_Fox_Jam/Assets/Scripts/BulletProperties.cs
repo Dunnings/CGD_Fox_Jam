@@ -31,7 +31,9 @@ public class BulletProperties : MonoBehaviour
         //if alive time is out destroy game object
         if (aliveTime <= 0 || this.transform.position.y < WorldGenerator.Instance.m_surfacePos + 0.1f)
         {
+            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(0.0f, 0.0f, 0.0f);
             gameObject.SetActive(false);
+
         }
     }
 }
