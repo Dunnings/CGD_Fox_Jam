@@ -4,7 +4,7 @@ using System.Collections;
 using System;
 
 public class Fox : MonoBehaviour {
-
+    
     public float m_hunger = 100f;
     public float m_maxHunger = 100f;
 
@@ -25,7 +25,8 @@ public class Fox : MonoBehaviour {
     public FoxCam m_camera;
     
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         m_healthBarStartWidth = m_healthBar.GetComponent<RectTransform>().sizeDelta.x;
         lastPos = transform.position;
     }

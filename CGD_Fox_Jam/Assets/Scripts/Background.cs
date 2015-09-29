@@ -16,8 +16,11 @@ public class Background : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        float xPos = camStartPos.x - Camera.main.transform.position.x;
-        xPos *= m_mod;
-        transform.position = new Vector3(xPos, startPos.y, startPos.z);
+        if (Camera.main != null)
+        {
+            float xPos = camStartPos.x - Camera.main.transform.position.x;
+            xPos *= m_mod;
+            transform.position = new Vector3(xPos, startPos.y, startPos.z);
+        }
 	}
 }
