@@ -75,7 +75,7 @@ public class WorldGenerator : MonoBehaviour {
         //Left
         for (int x = -40; x < 30; x++)
         {
-            for (int i = 1; i < 30; i++)
+            for (int i = 1; i < 15; i++)
             {
                 GameObject newObj = Instantiate<GameObject>(m_bedrockPrefab);
                 newObj.transform.position = new Vector3(-(m_width / 2) - i * m_tileWidth, m_surfacePos - (x * m_tileWidth), 0f);
