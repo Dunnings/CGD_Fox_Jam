@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class AnimalSpawner : MonoBehaviour 
 {
     //list stores all enemies
+    public GameObject player; 
     public GameObject animal;
     public int SpawnRate;
     public int SpawnAmount;
@@ -34,6 +35,21 @@ public class AnimalSpawner : MonoBehaviour
             if (AnimalManager.instance.CurrentSpawned < AnimalManager.instance.MaxSpawnAmount &&
                  AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].activeInHierarchy == false)
             {
+                Vector2 spawn;
+                if (player.transform.position.x < 0.0f)
+                {
+                     spawn = new Vector2(Random.Range(15.0f, WorldGenerator.Instance.m_width / 2f),
+                        WorldGenerator.Instance.m_surfacePos + 0.25f);
+                }
+                else
+                {
+                     spawn = new Vector2(Random.Range(0 - WorldGenerator.Instance.m_width / 2f , - 15.0f),
+                        WorldGenerator.Instance.m_surfacePos + 0.25f);
+                }
+
+
+                AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].transform.position = spawn;
+
                 //re randomize enemy
                 AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].GetComponent<Animal>().Init();
 
