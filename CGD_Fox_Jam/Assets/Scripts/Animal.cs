@@ -117,7 +117,7 @@ public class Animal : MonoBehaviour
         Destroy(deathParticles, 4f);
         FindObjectOfType<SFXManager>().PlayDeathSound();
         FindObjectOfType<Fox>().SmallReward();
-        Destroy(gameObject);
+        
     }
 
     /// <summary>
