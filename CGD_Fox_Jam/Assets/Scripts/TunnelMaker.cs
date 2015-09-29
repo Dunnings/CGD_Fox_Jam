@@ -75,7 +75,7 @@ public class TunnelMaker : MonoBehaviour {
 
             if (noToSpawn > 3)
             {
-                Debug.Log(noToSpawn);
+                //Debug.Log(noToSpawn);
             }
 
             bool hasBreached = false;
