@@ -7,19 +7,19 @@ public class EnemySpawner : MonoBehaviour
     //list stores all enemies
     public List<GameObject> farmers = new List<GameObject>();
     public GameObject player;
-    public int SpawnRate;
+    public float SpawnRate;
     public int StartSpawnAmount;
     public float PlayerToSpawnBuffer;
 
-    float SpawnCounter = 0;
+    float SpawnCounter = 0;      
 
     void Start()
     {
-        EnemyManager.GetInstance().MaxSpawnAmount = StartSpawnAmount;
+        EnemyManager.instance.MaxSpawnAmount += StartSpawnAmount;
 
-        EnemyManager.GetInstance().player = player;
+        EnemyManager.instance.player = player;
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < StartSpawnAmount; i++)
         {
             SpawnFarmer();
         }
@@ -31,33 +31,30 @@ public class EnemySpawner : MonoBehaviour
     void Update()
     {
         //calc distance between enemy and spawn point
-        float distance = EnemyManager.GetInstance().player.transform.position.x - this.transform.position.x;
+        float distance = EnemyManager.instance.player.transform.position.x - this.transform.position.x;
        
         //if my SpawnCounter is out and the player is far away 
         if (SpawnCounter <= 0 && 
             (distance > PlayerToSpawnBuffer || distance < -PlayerToSpawnBuffer))
         {
-            //and the amount of enemies spawned is less than the max spawn
-            if (EnemyManager.GetInstance().ActiveEnemies != EnemyManager.GetInstance().MaxSpawnAmount)
+            //and the amount of enemies spawned is less than the max spawn and the enemy is not already active
+            if (EnemyManager.instance.CurrentSpawned < EnemyManager.instance.MaxSpawnAmount &&
+                 EnemyManager.instance.SpawnedEnemies[EnemyManager.instance.InactiveEnemies - 1].activeInHierarchy == false)
             {
-                //loop over all pooled farmers
-                for (int i = 0; i < EnemyManager.GetInstance().SpawnedEnemies.Count; i++)
-                {
-                    //if the farmer is not active
-                    if(EnemyManager.GetInstance().SpawnedEnemies[i].Value.activeInHierarchy == false)
-                    {
-                        //set position and active 
-                        EnemyManager.GetInstance().SpawnedEnemies[i].Value.transform.position = 
-                            new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos + 0.75f);
+                //set position and active 
+                EnemyManager.instance.SpawnedEnemies[EnemyManager.instance.InactiveEnemies-1].transform.position = 
+                    new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos + 0.75f);
 
-                        EnemyManager.GetInstance().SpawnedEnemies[i].Value.SetActive(true);
+                //re randomize enemy
+                EnemyManager.instance.SpawnedEnemies[EnemyManager.instance.InactiveEnemies-1].GetComponent<Enemy>().Init();
+
+                EnemyManager.instance.SpawnedEnemies[EnemyManager.instance.InactiveEnemies-1].SetActive(true);
                         
-                        //increment active enemies
-                        EnemyManager.GetInstance().ActiveEnemies++;
+                //Decrement active enemies
+                EnemyManager.instance.InactiveEnemies--;
 
-                        break;
-                    }
-                }
+                EnemyManager.instance.CurrentSpawned++;
+
             }
 
             //reset counter
@@ -67,7 +64,6 @@ public class EnemySpawner : MonoBehaviour
         else
         {
             SpawnCounter -= Time.deltaTime;
-            //Debug.Log(SpawnCounter);
         }
     }
 
@@ -76,32 +72,30 @@ public class EnemySpawner : MonoBehaviour
     /// </summary>
     void SpawnFarmer()
     {
-        //get a random index of farmers
-        int index = Random.Range(0, farmers.Count);
-
+        //generate spawn point
         Vector2 spawn = new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos + 0.75f);
 
         //create a new farmer
-        GameObject farmer = Instantiate(farmers[index], spawn, Quaternion.identity) as GameObject;
-
-        //create key value pair instance 
-        KeyValuePair<int, GameObject> instance = new KeyValuePair<int, GameObject>(EnemyManager.GetInstance().id, farmer);
-
+        GameObject farmer = Instantiate(farmers[0], spawn, Quaternion.identity) as GameObject;
+        
         //temp store and increment the unique ID
-        int myID = EnemyManager.GetInstance().id;
-        EnemyManager.GetInstance().id++;
+        int myID = EnemyManager.instance.id;
+        EnemyManager.instance.id++;
 
         //add farmer to list in EnemyManager
-        EnemyManager.GetInstance().SpawnedEnemies.Add(instance);
+        EnemyManager.instance.SpawnedEnemies.Add(farmer);
+
+        //increment amount of Inactive enemies
+        EnemyManager.instance.InactiveEnemies = EnemyManager.instance.SpawnedEnemies.Count;
 
         //get the enemy component and attach ID 
         farmer.GetComponent<Enemy>().id = myID;
 
         //give farmer a name 
-        farmer.name = "Farmer " + (EnemyManager.GetInstance().SpawnedEnemies.Count - 1).ToString();
+        farmer.name = "Farmer " + (EnemyManager.instance.SpawnedEnemies.Count - 1).ToString();
 
         //set the farmers parent to the spawner = nice hierarchy 
-        farmer.transform.parent = this.transform;
+        farmer.transform.parent = EnemyManager.instance.gameObject.transform;
 
         //turn of GameObject
         farmer.SetActive(false);

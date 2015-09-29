@@ -18,7 +18,7 @@ public class Cloud : MonoBehaviour {
         transform.position -= new Vector3(speed * Time.deltaTime, 0f, 0f);
         if (transform.position.x < -(WorldGenerator.Instance.m_width / 2))
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 	}
 }
