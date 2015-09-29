@@ -3,6 +3,8 @@ using System.Collections;
 
 public class FoxMovement : MonoBehaviour
 {
+    public GameObject m_particles;
+
     //Acceleration and Velocity
 	Vector3 acc, vel;
     //Other variables
@@ -15,6 +17,8 @@ public class FoxMovement : MonoBehaviour
 
     //Link to the animator
     public Animator m_animator;
+
+    private bool hasBounced = false;
     
     void Start ()
 	{
@@ -46,6 +50,7 @@ public class FoxMovement : MonoBehaviour
             //Toggel animation state
             m_animator.SetBool("burrowing", true);
             m_animator.SetBool("flying", false);
+            m_particles.SetActive(true);
         }
         else if(breached && !lastFrameBreached)
         {
@@ -54,6 +59,7 @@ public class FoxMovement : MonoBehaviour
             //Toggel animation state
             m_animator.SetBool("flying", true);
             m_animator.SetBool("burrowing", false);
+            m_particles.SetActive(false);
         }
 
         //The proposed new position
@@ -90,9 +96,16 @@ public class FoxMovement : MonoBehaviour
 		}
 		else
 		{
-			force = gameObject.transform.up * addForce;
+            if (vel.x >= 0)
+            {
+                force = Vector3.right * addForce;
+            }
+            else
+            {
+                force = -Vector3.right * addForce;
+            }
 
-			force.z.Equals(0);
+            force.z.Equals(0);
 			Vector3 newVel, newPos;
 			
 			if (vel.magnitude >= maxVel)
@@ -140,29 +153,64 @@ public class FoxMovement : MonoBehaviour
             //Set the fox's position to the proposed new position
             transform.position = proposedNewPos;
             //If right is pressed and the fox has not breached
-            if ((Input.GetKey(KeyCode.RightArrow) || rightPressed) && !breached)
+            if ((Input.GetKey(KeyCode.RightArrow) || rightPressed) && !breached && !hasBounced)
             {
                 //Rotate the fox by (-2.5)
-                gameObject.transform.Rotate(transform.forward, -2.5f);
-                Vector3 tempDir = gameObject.transform.up.normalized;
-                vel = vel.magnitude * tempDir;
+                //gameObject.transform.Rotate(Vector3.forward, 2.5f);
+                Vector3 tempDir = -gameObject.transform.up.normalized * Time.deltaTime * 20f;
+                if(vel.x > 0)
+                {
+                    vel = vel + tempDir;
+                }
+                else
+                {
+                    vel = vel - tempDir;
+                }
+                
             }
             //If left is pressed and the fox has not breached
-            if ((Input.GetKey(KeyCode.LeftArrow) || leftPressed) && !breached)
+            if ((Input.GetKey(KeyCode.LeftArrow) || leftPressed) && !breached && !hasBounced)
             {
                 //Rotate the fox by (2.5)
-                gameObject.transform.Rotate(transform.forward, 2.5f);
-                Vector3 tempDir = gameObject.transform.up.normalized;
-                vel = vel.magnitude * tempDir;
+                //gameObject.transform.Rotate(Vector3.forward, 2.5f);
+                Vector3 tempDir = gameObject.transform.up.normalized * Time.deltaTime * 20f;
+                if (vel.x > 0)
+                {
+                    vel = vel + tempDir;
+                }
+                else
+                {
+                    vel = vel - tempDir;
+                }
             }
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                UnPressLeft();
+            }
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                UnPressRight();
+            }
+
+            vel = Vector3.ClampMagnitude(vel, maxVel);
         }
 
         //Get the velocity normalized
         Vector3 diff = vel.normalized;
         //Calculate z rotation based on the difference in x and y of normalized velocity
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        //Rotate the fox based on the rotation (plus 90 degrees)
-        gameObject.transform.rotation = Quaternion.AngleAxis(rot_z - 90, Vector3.forward);
+        //Rotate the fox based on the rotation (plus 90 degrees)x 
+        if (diff.x <= 0)
+        {
+            m_particles.transform.rotation = Quaternion.AngleAxis(rot_z + 90, Vector3.forward) * Quaternion.Euler(180, 0, 270);
+            gameObject.transform.rotation = Quaternion.AngleAxis(rot_z + 270, Vector3.forward) * Quaternion.Euler(180, 0, 270);
+        }
+        else
+        {
+            m_particles.transform.rotation = Quaternion.AngleAxis(rot_z + 90, Vector3.forward) * Quaternion.Euler(180, 0, 270);
+            gameObject.transform.rotation = Quaternion.AngleAxis(rot_z + 270, Vector3.forward) * Quaternion.Euler(0, 180, 270);
+        }
+
     }
 
 
@@ -188,6 +236,7 @@ public class FoxMovement : MonoBehaviour
     /// </summary>
     public void UnPressLeft()
     {
+        ReleaseBounce();
         leftPressed = false;
     }
 
@@ -196,6 +245,7 @@ public class FoxMovement : MonoBehaviour
     /// </summary>
     public void UnPressRight()
     {
+        ReleaseBounce();
         rightPressed = false;
     }
 
@@ -213,6 +263,7 @@ public class FoxMovement : MonoBehaviour
     /// </summary>
     public void BounceBottom()
     {
+        hasBounced = true;
         vel.y = -vel.y;
 
         Vector3 diff = vel;
@@ -225,10 +276,16 @@ public class FoxMovement : MonoBehaviour
     /// </summary>
     public void BounceSide()
     {
+        hasBounced = true;
         vel.x = -vel.x;
 
         Vector3 diff = vel;
         diff.Normalize();
         vel *= 0.25f;
+    }
+
+    public void ReleaseBounce()
+    {
+        hasBounced = false;
     }
 }

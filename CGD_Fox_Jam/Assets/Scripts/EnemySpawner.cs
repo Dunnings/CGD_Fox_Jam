@@ -18,6 +18,11 @@ public class EnemySpawner : MonoBehaviour
         EnemyManager.GetInstance().MaxSpawnAmount = StartSpawnAmount;
 
         EnemyManager.GetInstance().player = player;
+
+        for (int i = 0; i < 100; i++)
+        {
+            SpawnFarmer();
+        }
     }
 
     /// <summary>
@@ -27,20 +32,36 @@ public class EnemySpawner : MonoBehaviour
     {
         //calc distance between enemy and spawn point
         float distance = EnemyManager.GetInstance().player.transform.position.x - this.transform.position.x;
-
        
         //if my SpawnCounter is out and the player is far away 
-        if (SpawnCounter <= 0 && distance >
-            PlayerToSpawnBuffer || distance < -PlayerToSpawnBuffer)
+        if (SpawnCounter <= 0 && 
+            (distance > PlayerToSpawnBuffer || distance < -PlayerToSpawnBuffer))
         {
             //and the amount of enemies spawned is less than the max spawn
-            if (EnemyManager.GetInstance().SpawnedEnemies.Count != EnemyManager.GetInstance().MaxSpawnAmount)
+            if (EnemyManager.GetInstance().ActiveEnemies != EnemyManager.GetInstance().MaxSpawnAmount)
             {
-                //spawn a farmer
-                SpawnFarmer();
-                //reset counter
-                SpawnCounter = SpawnRate;
+                //loop over all pooled farmers
+                for (int i = 0; i < EnemyManager.GetInstance().SpawnedEnemies.Count; i++)
+                {
+                    //if the farmer is not active
+                    if(EnemyManager.GetInstance().SpawnedEnemies[i].Value.activeInHierarchy == false)
+                    {
+                        //set position and active 
+                        EnemyManager.GetInstance().SpawnedEnemies[i].Value.transform.position = 
+                            new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos + 0.75f);
+
+                        EnemyManager.GetInstance().SpawnedEnemies[i].Value.SetActive(true);
+                        
+                        //increment active enemies
+                        EnemyManager.GetInstance().ActiveEnemies++;
+
+                        break;
+                    }
+                }
             }
+
+            //reset counter
+            SpawnCounter = SpawnRate;
         }
         //else decrement the counter 
         else
@@ -58,7 +79,7 @@ public class EnemySpawner : MonoBehaviour
         //get a random index of farmers
         int index = Random.Range(0, farmers.Count);
 
-        Vector2 spawn = new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos);
+        Vector2 spawn = new Vector2(this.transform.position.x, WorldGenerator.Instance.m_surfacePos + 0.75f);
 
         //create a new farmer
         GameObject farmer = Instantiate(farmers[index], spawn, Quaternion.identity) as GameObject;
@@ -81,5 +102,8 @@ public class EnemySpawner : MonoBehaviour
 
         //set the farmers parent to the spawner = nice hierarchy 
         farmer.transform.parent = this.transform;
+
+        //turn of GameObject
+        farmer.SetActive(false);
     }
 }
