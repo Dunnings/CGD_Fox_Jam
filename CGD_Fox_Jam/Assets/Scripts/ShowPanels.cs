@@ -7,9 +7,10 @@ public class ShowPanels : MonoBehaviour {
 	public GameObject menuPanel;
 	public GameObject optionsPanel;
 
-	public void menu ()
+	public void ShowMenuPanel ()
 	{
 		Time.timeScale = 0;
+		menuPanel.SetActive (true);
 	}
 	public void ShowLevelSelectPanel ()
 	{
