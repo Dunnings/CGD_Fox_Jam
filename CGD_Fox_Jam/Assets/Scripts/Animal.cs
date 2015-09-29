@@ -28,7 +28,7 @@ public class Animal : MonoBehaviour
 
     private Vector2 wayPoint = new Vector2();
 
-    public void Start()
+    public void Init()
     {
         //create a random type based on percent weights
         float thisRand = Random.Range(0.0f, 1.0f);

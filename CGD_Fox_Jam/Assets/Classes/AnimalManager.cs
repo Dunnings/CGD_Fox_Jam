@@ -2,37 +2,40 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AnimalManager
+public class AnimalManager : MonoBehaviour
 {
-    private static AnimalManager instance;
-    public static AnimalManager GetInstance()
-    {
-        if(instance == null)
-        {
-            instance = new AnimalManager();
-        }
+    public static AnimalManager instance;
 
-        return instance;
+    public List<GameObject> SpawnedAnimals = new List<GameObject>();
+    public int MaxSpawnAmount;
+
+    public int CurrentSpawned = 0; 
+    public int InactiveAnimals = 0;
+    public int id = 0;
+
+    void Awake()
+    {
+        instance = this;
     }
 
-    public List<KeyValuePair<int, GameObject>> SpawnedAnimals = new List<KeyValuePair<int, GameObject>>();
-    public int MaxSpawnAmount;
-    public int id = 0;
+    void Update()
+    {
+        //make sure Inactive 
+        if (InactiveAnimals <= 0)
+        {
+            InactiveAnimals = SpawnedAnimals.Count;
+        }
+    }
 
     /// <summary>
     /// Remove farmer at instance 
     /// </summary>
     public void RemoveSpawnedAnimal(int id)
     {
-        //remove instance from the list
-        for (int i = 0; i < SpawnedAnimals.Count; i++)
-        {
-            if (SpawnedAnimals[i].Key == id)
-            {
-                SpawnedAnimals.RemoveAt(i);
-                break;
-            }
-        }
+        //set animals at position inactive
+        SpawnedAnimals[id].SetActive(false);
+
+        CurrentSpawned--;
     }
 
 }

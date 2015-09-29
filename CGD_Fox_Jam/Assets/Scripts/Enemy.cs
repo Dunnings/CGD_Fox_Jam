@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour
 	shotgunFarmerPercentage = 0.8f, assualtFarmerPercentage = 0.9f ;
     float shootCountdown;
 
+    int health = 2;
+
 	bool stayHit = false, colHit = false;
 
 	Vector3 poot = Vector3.zero;
@@ -27,22 +29,26 @@ public class Enemy : MonoBehaviour
     public GameObject bullet, m_DeathParticle;
     public List<Sprite> farmerSprites = new List<Sprite>();
     private List<GameObject> m_bullets = new List<GameObject>();
+    List<SpriteRenderer> ChildSprite = new List<SpriteRenderer>(); 
     
-
     public void Start()
     {
         //pool bullets, give each enemy 50 bullets
         for (int i = 0; i < 10; i++)
         {
-            Debug.Log("Spawning Bullets");
+            //Debug.Log("Spawning Bullets");
             SpawnBullet();
-        }
+        }      
+    }
 
+
+    public void Init()
+    {
         //create a random type based on percent weights
         float thisRand = Random.Range(0.0f, 1.0f);
 
         //generate farmer type
-        if(thisRand > assualtFarmerPercentage)
+        if (thisRand > assualtFarmerPercentage)
         {
             this.type = EnemyType.assaultFarmer;
             //this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[2];
@@ -61,7 +67,7 @@ public class Enemy : MonoBehaviour
             shootCoolDown = 0.5f;
         }
 
-        
+
 
         //create a rand buffer distance 
         bufferDistance = Random.Range(1, bufferDistance);
@@ -76,8 +82,8 @@ public class Enemy : MonoBehaviour
     public void FixedUpdate()
     {
         FarmerUpdate();
-        if (EnemyManager.GetInstance().player.transform.position.y >= WorldGenerator.Instance.m_surfacePos
-            && Vector3.Distance(EnemyManager.GetInstance().player.transform.position, this.transform.position) < lineOfSight)
+        if (EnemyManager.instance.player.transform.position.y >= WorldGenerator.Instance.m_surfacePos
+            && Vector3.Distance(EnemyManager.instance.player.transform.position, this.transform.position) < lineOfSight)
         {
             ShootAtPlayer();
         }             
@@ -87,25 +93,26 @@ public class Enemy : MonoBehaviour
     /// Enemy Farmer update
     /// </summary>
     public void FarmerUpdate()
-    {        
+    {
        //if enemy is less than the player pos increment up on 
-       if (gameObject.GetComponent<Rigidbody2D>().position.x <= EnemyManager.GetInstance().player.transform.position.x - bufferDistance)
+       if (gameObject.GetComponent<Rigidbody2D>().position.x <= EnemyManager.instance.player.transform.position.x - bufferDistance)
        {   
            Vector3 vel = new Vector3(1, 0, 0);
            
 			if (colHit || stayHit)
 			{
-				gameObject.GetComponent<Rigidbody2D>().velocity = poot ;
+				gameObject.GetComponent<Rigidbody2D>().velocity = poot;
 			}
 			else
 			{
 				gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
 			}
 
-			transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+			//transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+           transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
        }
        //else increment down on the x 
-       else if (gameObject.transform.position.x >= EnemyManager.GetInstance().player.transform.position.x + bufferDistance)
+       else if (gameObject.transform.position.x >= EnemyManager.instance.player.transform.position.x + bufferDistance)
        {
            Vector3 vel = new Vector3(-1, 0, 0);
 
@@ -117,7 +124,9 @@ public class Enemy : MonoBehaviour
 			{
 				gameObject.GetComponent<Rigidbody2D>().velocity = vel * Random.Range(speed, speed * 1.5f);
 			}
-           transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+           //transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+
+            transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
        }
     }
     
@@ -161,8 +170,8 @@ public class Enemy : MonoBehaviour
     /// <returns></returns>
     Vector3 CalcBulletDirection()
     {
-       return new Vector3(Random.Range(EnemyManager.GetInstance().player.transform.position.x, EnemyManager.GetInstance().player.transform.position.x + 1.0f),
-                        Random.Range(EnemyManager.GetInstance().player.transform.position.y, EnemyManager.GetInstance().player.transform.position.y + 1.0f), 0.0f) -
+       return new Vector3(Random.Range(EnemyManager.instance.player.transform.position.x, EnemyManager.instance.player.transform.position.x + 1.0f),
+                        Random.Range(EnemyManager.instance.player.transform.position.y, EnemyManager.instance.player.transform.position.y + 1.0f), 0.0f) -
                         this.gameObject.transform.position;
     }
 
@@ -191,16 +200,14 @@ public class Enemy : MonoBehaviour
         {
             if(m_bullets[i].activeInHierarchy == false)
             {
-                Debug.Log("bang");
+                //Debug.Log("bang");
 
                 //create a direction for the bullet based on player
                 Vector3 direction = CalcBulletDirection();
                 
                 m_bullets[i].SetActive(true);
-
-
-                //m_bullets[i].GetComponent<BulletProperties>().SetVelocity(direction, bulletSpeed);
-                //m_bullets[i].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+                
+                m_bullets[i].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
                               
                 break;
             }
@@ -220,6 +227,9 @@ public class Enemy : MonoBehaviour
         AwayFrom.Normalize();
 
         poot = (AwayFrom * pushBackForce) * (Time.deltaTime);
+
+        //poot = new Vector3(poot.x, 0.0f, 0.0f);
+
     }
 
     /// <summary>
@@ -227,9 +237,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void KillInstance()
     {
-        EnemyManager.GetInstance().player.GetComponent<Fox>().Reward();
-
-        EnemyManager.GetInstance().RemoveSpawnedFarmer(id);
+        EnemyManager.instance.player.GetComponent<Fox>().Reward();        
         GameObject deathParticles = Instantiate(m_DeathParticle);
 
         Vector3 pos = transform.position;
@@ -238,9 +246,9 @@ public class Enemy : MonoBehaviour
         Destroy(deathParticles, 6f);
         FindObjectOfType<SFXManager>().PlayDeathSound();
 
-        //decrease active amount 
-        EnemyManager.GetInstance().ActiveEnemies--;
-        //don't destory anymore due to object pooling
+        EnemyManager.instance.RemoveSpawnedFarmer(id);
+
+        //don't destroy anymore due to object pooling
         //Destroy(gameObject);        
     }
 
@@ -251,11 +259,15 @@ public class Enemy : MonoBehaviour
         //player hits enemy
         if (col.tag == "Player")
         {
+            
             KillInstance();
+           
         }
 
         //enemy hits enemy
         if (col.tag == "Enemy") {
+
+            
 			PushBack (col);
 			colHit = true;
 		}      
@@ -263,14 +275,16 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D col)
     {
-		currentCol = col;
+        currentCol = col;
 
-		//enemy hits enemy
-		if (col.tag == "Enemy") {
-			PushBack (col);
-			stayHit = true;
-		}
-	}
+        //enemy hits enemy
+        if (col.tag == "EnemyCollider")
+        {
+            Debug.Log("Enemy");
+            PushBack(col);
+            stayHit = true;
+        }
+    }
 
 	void OnTriggerExit2D(Collider2D col)
 	{
