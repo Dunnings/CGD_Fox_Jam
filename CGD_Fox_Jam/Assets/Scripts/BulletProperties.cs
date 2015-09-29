@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Bullet : MonoBehaviour 
+public class BulletProperties : MonoBehaviour 
 {
     float aliveTime = 1.0f;
     public float damage = 1.0f;
