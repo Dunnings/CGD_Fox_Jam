@@ -152,4 +152,12 @@ public class Fox : MonoBehaviour {
         float rewardAmount = 10f;
         m_hunger = Mathf.Min(m_maxHunger, m_hunger + rewardAmount);
     }
+
+    public void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.gameObject.GetComponent<BulletProperties>() != null)
+        {
+            m_hunger = m_hunger - col.gameObject.GetComponent<BulletProperties>().damage;
+        }
+    }
 }
