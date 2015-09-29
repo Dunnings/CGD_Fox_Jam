@@ -18,10 +18,11 @@ public class EnemyManager
     public List<KeyValuePair<int, GameObject>> SpawnedEnemies = new List<KeyValuePair<int, GameObject>>();
     public int MaxSpawnAmount;
     public int id = 0;
+    public int ActiveEnemies = 0;
     public GameObject player; 
 
     /// <summary>
-    /// Remove farmer at instance 
+    /// Set farmer instance to inactive
     /// </summary>
     public void RemoveSpawnedFarmer (int id)
     {
@@ -30,7 +31,7 @@ public class EnemyManager
         {
             if(SpawnedEnemies[i].Key == id)
             {
-                SpawnedEnemies.RemoveAt(i);
+                SpawnedEnemies[i].Value.SetActive(false);
                 break;
             }
         }

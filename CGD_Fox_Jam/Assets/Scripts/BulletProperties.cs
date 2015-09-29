@@ -14,7 +14,7 @@ public class BulletProperties : MonoBehaviour
     {
         if(col.tag == "Player")
         {
-           Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
     }
@@ -29,9 +29,9 @@ public class BulletProperties : MonoBehaviour
         aliveTime -= Time.deltaTime;
 
         //if alive time is out destroy game object
-        if (aliveTime == 0 || this.transform.position.y < WorldGenerator.Instance.m_surfacePos + 0.1f)
+        if (aliveTime <= 0 || this.transform.position.y < WorldGenerator.Instance.m_surfacePos + 0.1f)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }
