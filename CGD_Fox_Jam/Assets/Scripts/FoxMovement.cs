@@ -234,8 +234,7 @@ public class FoxMovement : MonoBehaviour
         {
             m_speedBarBack.color = m_col1;
         }
-        m_speedBar.transform.localScale = new Vector3(vel.magnitude / maxVel, 1f, 1f);
-
+        m_speedBar.transform.localScale = new Vector3(Mathf.Clamp(vel.magnitude / maxVel, 0f,1f), 1f, 1f);
     }
 
 
