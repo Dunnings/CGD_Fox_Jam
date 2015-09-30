@@ -227,8 +227,10 @@ public class Enemy : MonoBehaviour
 
         if (m_bullets[TopBullet].activeInHierarchy == false)
         {
+            m_bullets[TopBullet].GetComponent<BulletProperties>().speed = bulletSpeed;
+
             //make sure velocity is nill
-            m_bullets[TopBullet].GetComponent<Rigidbody2D>().velocity = new Vector3(0.0f, 0.0f, 0.0f);
+            //m_bullets[TopBullet].GetComponent<Rigidbody2D>().velocity = new Vector3(0.0f, 0.0f, 0.0f);
             m_bullets[TopBullet].transform.position = this.transform.position;
 
             //create a direction for the bullet based on player
@@ -236,12 +238,16 @@ public class Enemy : MonoBehaviour
 
             if (direction.x < 0)
             {
-                m_bullets[TopBullet].gameObject.transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
+                m_bullets[TopBullet].gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
+
+            m_bullets[TopBullet].GetComponent<BulletProperties>().direction = direction;
 
             m_bullets[TopBullet].SetActive(true);
 
-            m_bullets[TopBullet].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+            //m_bullets[TopBullet].GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+
+            
 
             //decrement top bullet
             TopBullet--;
