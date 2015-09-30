@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class FoxMovement : MonoBehaviour
 {
+    public Color m_col1;
+    public Color m_col2;
+    public GameObject m_speedBar;
+    public Image m_speedBarBack;
+    public float m_speedBarStartWidth;
+
     public GameObject m_particles;
 
     //Acceleration and Velocity
@@ -22,7 +29,8 @@ public class FoxMovement : MonoBehaviour
     
     void Start ()
 	{
-		acc = Vector3.zero;
+        m_speedBarStartWidth = m_speedBar.GetComponent<RectTransform>().sizeDelta.x;
+        acc = Vector3.zero;
 		vel = Vector3.zero;
 		breached = false;
 		lastFrameBreached = false;
@@ -31,12 +39,19 @@ public class FoxMovement : MonoBehaviour
 	
 	void Update ()
 	{
-		Vector3 force;
+        m_speedBar.GetComponent<RectTransform>().sizeDelta = new Vector2(m_speedBarStartWidth * (vel.magnitude / maxVel), 0f);
+
+
+        Vector3 force;
 
 		if (transform.position.y >= breachHeight)
 		{
 			breached = true;
 		}
+        else if(transform.position.y > breachHeight - 0.25f && vel.y > 0 && vel.magnitude < maxVel * 0.7f)
+        {
+            BounceBottom();
+        }
 		else
 		{
 			breached = false;
@@ -210,6 +225,16 @@ public class FoxMovement : MonoBehaviour
             m_particles.transform.rotation = Quaternion.AngleAxis(rot_z + 90, Vector3.forward) * Quaternion.Euler(180, 0, 270);
             gameObject.transform.rotation = Quaternion.AngleAxis(rot_z + 270, Vector3.forward) * Quaternion.Euler(0, 180, 270);
         }
+
+        if (vel.magnitude > maxVel * 0.7f)
+        {
+            m_speedBarBack.color = m_col2;
+        }
+        else
+        {
+            m_speedBarBack.color = m_col1;
+        }
+        m_speedBar.transform.localScale = new Vector3(vel.magnitude / maxVel, 1f, 1f);
 
     }
 

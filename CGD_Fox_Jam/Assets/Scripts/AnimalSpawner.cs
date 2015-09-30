@@ -77,7 +77,7 @@ public class AnimalSpawner : MonoBehaviour
     void SpawnAnimal()
     {
         Vector2 spawn = new Vector2(Random.Range(0f - WorldGenerator.Instance.m_width / 2f, WorldGenerator.Instance.m_width / 2f), 
-            WorldGenerator.Instance.m_surfacePos+0.25f);
+            WorldGenerator.Instance.m_surfacePos+0.3f);
         
         //create a new farmer
         GameObject newAnimal = Instantiate(animal, spawn, Quaternion.identity) as GameObject;
