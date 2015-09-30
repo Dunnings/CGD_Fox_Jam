@@ -4,6 +4,8 @@ using System.Collections;
 
 public class FoxMovement : MonoBehaviour
 {
+    public GameObject menu;
+
     public Color m_col1;
     public Color m_col2;
     public GameObject m_speedBar;
@@ -168,7 +170,7 @@ public class FoxMovement : MonoBehaviour
             //Set the fox's position to the proposed new position
             transform.position = proposedNewPos;
             //If right is pressed and the fox has not breached
-            if ((Input.GetKey(KeyCode.RightArrow) || rightPressed) && !breached && !hasBounced)
+            if ((Input.GetKey(KeyCode.RightArrow) || rightPressed) && !breached && !hasBounced && !menu.activeSelf)
             {
                 //Rotate the fox by (-2.5)
                 //gameObject.transform.Rotate(Vector3.forward, 2.5f);
@@ -184,7 +186,7 @@ public class FoxMovement : MonoBehaviour
                 
             }
             //If left is pressed and the fox has not breached
-            if ((Input.GetKey(KeyCode.LeftArrow) || leftPressed) && !breached && !hasBounced)
+            if ((Input.GetKey(KeyCode.LeftArrow) || leftPressed) && !breached && !hasBounced && !menu.activeSelf)
             {
                 //Rotate the fox by (2.5)
                 //gameObject.transform.Rotate(Vector3.forward, 2.5f);

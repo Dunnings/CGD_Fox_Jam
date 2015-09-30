@@ -7,7 +7,7 @@ public class AnimalSpawner : MonoBehaviour
     //list stores all enemies
     public GameObject player; 
     public GameObject animal;
-    public int SpawnRate;
+    public float SpawnRate;
     public int SpawnAmount;
 
     float SpawnCounter = 0;
