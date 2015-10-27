@@ -25,8 +25,8 @@ public class Rock : MonoBehaviour
             go.transform.position = transform.position + new Vector3(0f,0.1f,0f);
             go.GetComponent<ParticleSystem>().Play();
 
-            col.gameObject.GetComponent<Fox>().m_camera.ShakeCamera();
-            col.gameObject.GetComponent<FoxMovement>().vel *= 0.2f;
+            col.gameObject.GetComponent<Fox>().m_camera.ShakeCamera(); 
+            col.gameObject.GetComponent<FoxMovement>().vel *= 0.5f;
             Destroy(gameObject);
         }
     }

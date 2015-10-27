@@ -4,14 +4,24 @@ using System.Collections;
 using System;
 
 public class Fox : MonoBehaviour {
-    
+
+    public float m_health = 100f;
+    public float m_maxHealth = 100f;
+
     public float m_hunger = 100f;
     public float m_maxHunger = 100f;
 
-    public float m_healthBarStartWidth;
+    public float m_sustainanceDangerPercent = 0.3f; //The point at which the fox becomes injured by hunger
+    public float m_hungerDamage = 5f;
 
-    public GameObject m_healthBar;
-    public Image m_healthBarBack;
+    public float m_sustainanceHealPercent = 0.7f;
+    public float m_sustainanceHealAmount = 3f;
+
+    public GameObject m_sustainanceBar;
+    public Image m_sustainanceBarBack;
+    
+    public GameObject m_healthbar; //Panel which is resized to signify health remaining
+    public Image m_healthbarBack; //Changing colours
 
     public GameObject m_breachParticle;
     public GameObject m_enterParticle;
@@ -19,17 +29,17 @@ public class Fox : MonoBehaviour {
     bool hasBreached = false;
     bool hasSpawnedThisBreach = false;
     
-
     public Vector3 lastPos;
 
     public FoxCam m_camera;
 
     public GameObject menu;
+
+    public bool m_isGameOver = false;
     
     // Use this for initialization
     void Start ()
     {
-        m_healthBarStartWidth = m_healthBar.GetComponent<RectTransform>().sizeDelta.x;
         lastPos = transform.position;
     }
 	
@@ -40,9 +50,8 @@ public class Fox : MonoBehaviour {
         {
             DecreaseHunger(3f * Time.deltaTime);
         }
-        m_healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(m_healthBarStartWidth * (m_hunger / m_maxHunger), 0f);
 
-        if(transform.position.y > WorldGenerator.Instance.m_surfacePos)
+        if (transform.position.y > WorldGenerator.Instance.m_surfacePos)
         {
             hasBreached = true;
         }
@@ -82,6 +91,15 @@ public class Fox : MonoBehaviour {
         else if (gameObject.GetComponent<FoxMovement>().GetVel().x < 0)
         {
             gameObject.transform.localScale = new Vector3(-0.2f, gameObject.transform.localScale.y, gameObject.transform.localScale.z);
+        }
+
+        if(m_hunger / m_maxHunger <= m_sustainanceDangerPercent)
+        {
+            Damage(m_hungerDamage * Time.deltaTime);
+        }
+        else if (m_hunger / m_maxHunger >= m_sustainanceHealPercent)
+        {
+            IncreaseHealth(m_sustainanceHealAmount * Time.deltaTime);
         }
     }
 
@@ -129,24 +147,54 @@ public class Fox : MonoBehaviour {
         if(m_hunger <= 0)
         {
 
-            //GAME OVER
+            m_isGameOver = true;
             return;
         }
 
 
-        m_healthBar.transform.localScale = new Vector3(m_hunger / m_maxHunger, 1f, 1f);
+        m_sustainanceBar.transform.localScale = new Vector3(m_hunger / m_maxHunger, 1f, 1f);
         if (m_hunger / m_maxHunger > 0.6f)
         {
-            m_healthBarBack.color = m_col1;
+            m_sustainanceBarBack.color = m_col1;
         }
         else if (m_hunger / m_maxHunger > 0.2f)
         {
-            m_healthBarBack.color = m_col2;
+            m_sustainanceBarBack.color = m_col2;
         }
         else
         {
-            m_healthBarBack.color = m_col3;
+            m_sustainanceBarBack.color = m_col3;
         }
+    }
+
+    public void IncreaseHealth(float _amount)
+    {
+        m_health = Mathf.Clamp(m_health + _amount, 0f, m_maxHealth);
+        m_healthbar.transform.localScale = new Vector3((m_health / m_maxHealth), 1f, 1f);
+    }
+
+    public void Damage(float _amount)
+    {
+        m_health = Mathf.Clamp(m_health - _amount, 0f, m_maxHealth);
+
+        if (m_health == 0f)
+        {
+            m_isGameOver = true;
+        }
+
+        if (m_health / m_maxHealth > 0.6f)
+        {
+            m_healthbarBack.color = m_col1;
+        }
+        else if (m_health / m_maxHealth > 0.2f) 
+        {
+            m_healthbarBack.color = m_col2;
+        }
+        else
+        {
+            m_healthbarBack.color = m_col3;
+        }
+        m_healthbar.transform.localScale = new Vector3((m_health / m_maxHealth), 1f, 1f);
     }
 
     public void SmallReward()
@@ -164,7 +212,7 @@ public class Fox : MonoBehaviour {
     {
         if(col.gameObject.GetComponent<BulletProperties>() != null)
         {
-            m_hunger = m_hunger - col.gameObject.GetComponent<BulletProperties>().damage;
+            Damage(col.gameObject.GetComponent<BulletProperties>().damage);
         }
     }
 }

@@ -8,9 +8,6 @@ public class FoxMovement : MonoBehaviour
 
     public Color m_col1;
     public Color m_col2;
-    public GameObject m_speedBar;
-    public Image m_speedBarBack;
-    public float m_speedBarStartWidth;
 
     public GameObject m_particles;
 
@@ -31,7 +28,6 @@ public class FoxMovement : MonoBehaviour
     
     void Start ()
 	{
-        m_speedBarStartWidth = m_speedBar.GetComponent<RectTransform>().sizeDelta.x;
         acc = Vector3.zero;
 		vel = Vector3.zero;
 		breached = false;
@@ -41,19 +37,12 @@ public class FoxMovement : MonoBehaviour
 	
 	void Update ()
 	{
-        m_speedBar.GetComponent<RectTransform>().sizeDelta = new Vector2(m_speedBarStartWidth * (vel.magnitude / maxVel), 0f);
-
-
         Vector3 force;
 
 		if (transform.position.y >= breachHeight)
 		{
 			breached = true;
 		}
-        else if(transform.position.y > breachHeight - 0.25f && vel.y > 0 && vel.magnitude < maxVel * 0.7f)
-        {
-            BounceBottom();
-        }
 		else
 		{
 			breached = false;
@@ -175,7 +164,7 @@ public class FoxMovement : MonoBehaviour
                 //Rotate the fox by (-2.5)
                 //gameObject.transform.Rotate(Vector3.forward, 2.5f);
                 Vector3 tempDir = -gameObject.transform.up.normalized * Time.deltaTime * 20f;
-                if(vel.x > 0)
+                if (vel.x > 0)
                 {
                     vel = vel + tempDir;
                 }
@@ -185,7 +174,7 @@ public class FoxMovement : MonoBehaviour
                 }
                 
             }
-            //If left is pressed and the fox has not breached
+            //If left is pressed and the fox has not breached 
             if ((Input.GetKey(KeyCode.LeftArrow) || leftPressed) && !breached && !hasBounced && !menu.activeSelf)
             {
                 //Rotate the fox by (2.5)
@@ -227,16 +216,6 @@ public class FoxMovement : MonoBehaviour
             m_particles.transform.rotation = Quaternion.AngleAxis(rot_z + 90, Vector3.forward) * Quaternion.Euler(180, 0, 270);
             gameObject.transform.rotation = Quaternion.AngleAxis(rot_z + 270, Vector3.forward) * Quaternion.Euler(0, 180, 270);
         }
-
-        if (vel.magnitude > maxVel * 0.7f)
-        {
-            m_speedBarBack.color = m_col2;
-        }
-        else
-        {
-            m_speedBarBack.color = m_col1;
-        }
-        m_speedBar.transform.localScale = new Vector3(Mathf.Clamp(vel.magnitude / maxVel, 0f,1f), 1f, 1f);
     }
 
 

@@ -28,7 +28,7 @@ public class Animal : MonoBehaviour
 
     private Vector2 wayPoint = new Vector2();
 
-    public void Init()
+    public void Init(Vector3 _spawnPos)
     {
         //create a random type based on percent weights
         float thisRand = Random.Range(0.0f, 1.0f);
@@ -49,6 +49,8 @@ public class Animal : MonoBehaviour
             this.type = AnimalType.worm;
             //this.gameObject.GetComponent<SpriteRenderer>().sprite = animalSprites[0];
         }
+        transform.position = _spawnPos;
+
     }
 
     public void FixedUpdate()

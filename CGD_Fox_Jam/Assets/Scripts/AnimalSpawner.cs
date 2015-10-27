@@ -12,6 +12,8 @@ public class AnimalSpawner : MonoBehaviour
 
     float SpawnCounter = 0;
 
+    public float m_offscreenBufferDistance = 10f;
+
     void Start()
     {
         AnimalManager.instance.MaxSpawnAmount += SpawnAmount;
@@ -50,8 +52,29 @@ public class AnimalSpawner : MonoBehaviour
 
                 //AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].transform.position = spawn;
 
+                //New spawn code
+                float x1 = Random.Range(-(WorldGenerator.Instance.m_width / 2f), player.transform.position.x - m_offscreenBufferDistance);
+                float x2 = Random.Range(player.transform.position.x + m_offscreenBufferDistance, WorldGenerator.Instance.m_width / 2f);
+
+                if (player.transform.position.x - m_offscreenBufferDistance < -(WorldGenerator.Instance.m_width / 2f))
+                {
+                    //We are outside the bounds on the left hand side
+                    return;
+                }
+                else if (player.transform.position.x + m_offscreenBufferDistance > (WorldGenerator.Instance.m_width / 2f))
+                {
+                    //We are outside the bounds on the right hand side
+                    return;
+                }
+
+                float x = x1;
+                if (Random.Range(0f, 1f) > 0.5f)
+                {
+                    x = x2;
+                }
+
                 //re randomize enemy
-                AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].GetComponent<Animal>().Init();
+                AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].GetComponent<Animal>().Init(new Vector3(x, WorldGenerator.Instance.m_surfacePos + 0.3f, 0f));
 
                 AnimalManager.instance.SpawnedAnimals[AnimalManager.instance.InactiveAnimals - 1].SetActive(true);
 
@@ -74,11 +97,32 @@ public class AnimalSpawner : MonoBehaviour
     /// <summary>
     /// Spawns a framer at the instance of the spawner object
     /// </summary>
-    void SpawnAnimal()
+    bool SpawnAnimal()
     {
-        Vector2 spawn = new Vector2(Random.Range(0f - WorldGenerator.Instance.m_width / 2f, WorldGenerator.Instance.m_width / 2f), 
-            WorldGenerator.Instance.m_surfacePos+0.3f);
-        
+
+        //New spawn code
+        float x1 = Random.Range(-(WorldGenerator.Instance.m_width / 2f), player.transform.position.x - m_offscreenBufferDistance);
+        float x2 = Random.Range(player.transform.position.x + m_offscreenBufferDistance, WorldGenerator.Instance.m_width / 2f);
+
+        //if(player.transform.position.x - m_offscreenBufferDistance < -(WorldGenerator.Instance.m_width / 2f))
+        //{
+        //    //We are outside the bounds on the left hand side
+        //    return false;
+        //}
+        //if (player.transform.position.x + m_offscreenBufferDistance > (WorldGenerator.Instance.m_width / 2f))
+        //{
+        //    //We are outside the bounds on the right hand side
+        //    return false;
+        //}
+
+        float x = x1;
+        if(Random.Range(0f, 1f) > 0.5f)
+        {
+            x = x2;
+        }
+
+        Vector2 spawn = new Vector2(x, WorldGenerator.Instance.m_surfacePos + 0.3f);
+
         //create a new farmer
         GameObject newAnimal = Instantiate(animal, spawn, Quaternion.identity) as GameObject;
 
@@ -102,5 +146,12 @@ public class AnimalSpawner : MonoBehaviour
         newAnimal.transform.parent = AnimalManager.instance.transform;
 
         newAnimal.gameObject.SetActive(false);
+        return true;
+    }
+
+    void OnDrawGizmos()
+    {
+        //Gizmos.DrawLine(player.transform.position, player.transform.position + new Vector3(m_offscreenBufferDistance, 0f, 0f));
+        //Gizmos.DrawLine(player.transform.position, player.transform.position + new Vector3(-m_offscreenBufferDistance, 0f, 0f));
     }
 }
