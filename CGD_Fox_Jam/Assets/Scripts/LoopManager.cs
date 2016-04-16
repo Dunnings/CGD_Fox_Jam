@@ -10,9 +10,14 @@ public class LoopManager : MonoBehaviour {
 	{
 
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    public void CloseProgram()
+    {
+        Application.Quit();
+    }
+
+    // Update is called once per frame
+    void Update ()
 	{
 		//"FOOOOOOOOOOOOOOOOOOOOOOX" - Solid Snake, Metal Gear Solid (1998)
 		if (fox.GetComponent<Fox>().m_isGameOver && foxCamera.GetComponent<Camera>().enabled == true)

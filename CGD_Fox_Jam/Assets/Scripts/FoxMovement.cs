@@ -126,9 +126,9 @@ public class FoxMovement : MonoBehaviour
 			
 			acc = force / mass;
 			
-			newVel = vel + (Time.fixedDeltaTime * acc);
+			newVel = vel + (Time.deltaTime * acc);
 			
-			newPos = transform.position + (Time.fixedDeltaTime * vel);
+			newPos = transform.position + (Time.deltaTime * vel);
 			
 			vel = newVel;
 			proposedNewPos = newPos;

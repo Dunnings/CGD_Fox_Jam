@@ -18,9 +18,9 @@ public class GameOver : MonoBehaviour {
 		{
 			gameObject.GetComponent<Camera>().orthographicSize += 0.007875f;
 
-			if (gameObject.GetComponent<Camera>().orthographicSize > 1.6f)
+			if (gameObject.GetComponent<Camera>().orthographicSize > 2f)
 			{
-				gameObject.GetComponent<Camera>().orthographicSize = 1.6f;
+				gameObject.GetComponent<Camera>().orthographicSize = 2;
 			}
 
 
