@@ -105,7 +105,7 @@ public class TunnelMaker : MonoBehaviour {
                     newTrailSprite.transform.rotation = gameObject.transform.rotation;
                     newTrailSprite.transform.position = lastPos + difference;
                     newTrailSprite.gameObject.transform.SetParent(m_trailParent.transform);
-                    if (gameObject.GetComponent<FoxMovement>().GetVel().x > 0)
+                    if (gameObject.GetComponent<FoxMovement>().vel.x > 0)
                     {
                         newTrailSprite.transform.Translate(new Vector3(m_offset.x, m_offset.y, m_offset.z));
                     }

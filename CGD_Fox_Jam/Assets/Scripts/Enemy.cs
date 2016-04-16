@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour 
 {
+    public List<AudioClip> shotgunSounds = new List<AudioClip>();
+    public AudioSource audioComponent;
+    public SpriteRenderer muzzleFlash;
     public enum EnemyType
     {
         rifleFarmer,
@@ -62,7 +65,7 @@ public class Enemy : MonoBehaviour
 
     public void Init()
     {
-        
+        audioComponent.clip = shotgunSounds[Random.Range(0, shotgunSounds.Count - 1)];
         //create a random type based on percent weights
         float thisRand = Random.Range(0.0f, 1.0f);
 
@@ -88,9 +91,7 @@ public class Enemy : MonoBehaviour
             //this.gameObject.GetComponent<SpriteRenderer>().sprite = farmerSprites[0];
             shootCoolDown = 0.5f;
         }
-
-
-
+        
         //create a rand buffer distance 
         bufferDistance = Random.Range(1, bufferDistance);
 
@@ -229,20 +230,13 @@ public class Enemy : MonoBehaviour
         {
             m_bullets[TopBullet].GetComponent<BulletProperties>().speed = bulletSpeed;
 
-            //make sure velocity is nill
+            //make sure velocity is null
             //m_bullets[TopBullet].GetComponent<Rigidbody2D>().velocity = new Vector3(0.0f, 0.0f, 0.0f);
             m_bullets[TopBullet].transform.position = this.transform.position;
 
             //create a direction for the bullet based on player
             Vector3 direction = CalcBulletDirection();
-
-            //m_bullets[TopBullet].transform.rotation = Quaternion.LookRotation(direction);
-
-            if (direction.x < 0)
-            {
-                m_bullets[TopBullet].gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            }
-
+            
             m_bullets[TopBullet].GetComponent<BulletProperties>().direction = direction;
 
             m_bullets[TopBullet].SetActive(true);
@@ -253,10 +247,15 @@ public class Enemy : MonoBehaviour
 
             //decrement top bullet
             TopBullet--;
-
-            //gunAnim.Play("farmer_shoot");    
+            audioComponent.Play();
+            muzzleFlash.enabled = true;
+            Invoke("muzzleOff", 0.1f);
+            gunAnim.Play("farmer_shoot");    
         }       
-          
+    }
+    void muzzleOff()
+    {
+        muzzleFlash.enabled = false;
     }
 
     /// <summary>

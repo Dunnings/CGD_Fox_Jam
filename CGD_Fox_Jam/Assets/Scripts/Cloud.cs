@@ -8,7 +8,9 @@ public class Cloud : MonoBehaviour {
     float speed = 1f;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
+        gameObject.hideFlags = HideFlags.HideInHierarchy;
         m_renderer.sprite = m_cloudsSprites[Random.Range(0, m_cloudsSprites.Count - 1)];
         speed = Random.Range(0.5f, 1.3f);
     }

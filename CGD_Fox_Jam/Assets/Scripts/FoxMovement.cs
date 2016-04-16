@@ -10,7 +10,7 @@ public class FoxMovement : MonoBehaviour
     public Color m_col2;
 
     public GameObject m_particles;
-
+    public AudioSource breachSound;
     //Acceleration and Velocity
 	public Vector3 acc, vel;
     //Other variables
@@ -53,18 +53,22 @@ public class FoxMovement : MonoBehaviour
 		if (!breached && lastFrameBreached)
 		{
 			vel /= 2;
-            //Toggel animation state
+            //Toggle animation state
             m_animator.SetBool("burrowing", true);
             m_animator.SetBool("flying", false);
             m_particles.SetActive(true);
+            m_particles.GetComponentInChildren<AudioSource>().mute = false;
         }
         else if(breached && !lastFrameBreached)
         {
             //Increase velocity by (40%) upon breaching
             vel *= 1.4f;
-            //Toggel animation state
+            //Toggle animation state
             m_animator.SetBool("flying", true);
             m_animator.SetBool("burrowing", false);
+            breachSound.Play();
+            m_particles.GetComponentInChildren<AudioSource>().mute = true;
+
             m_particles.SetActive(false);
         }
 
@@ -121,9 +125,9 @@ public class FoxMovement : MonoBehaviour
 			
 			acc = force / mass;
 			
-			newVel = vel + (Time.deltaTime * acc);
+			newVel = vel + (Time.fixedDeltaTime * acc);
 			
-			newPos = transform.position + (Time.deltaTime * vel);
+			newPos = transform.position + (Time.fixedDeltaTime * vel);
 			
 			vel = newVel;
 			proposedNewPos = newPos;
@@ -138,6 +142,7 @@ public class FoxMovement : MonoBehaviour
 			lastFrameBreached = false;
         }
 
+        #region bounce
         //If the fox is below the world depth bounce it up
         if (proposedNewPos.y < WorldGenerator.Instance.m_surfacePos - WorldGenerator.Instance.m_depth)
         {
@@ -200,7 +205,7 @@ public class FoxMovement : MonoBehaviour
 
             vel = Vector3.ClampMagnitude(vel, maxVel);
         }
-
+        #endregion
         //Get the velocity normalized
         Vector3 diff = vel.normalized;
         //Calculate z rotation based on the difference in x and y of normalized velocity
@@ -217,9 +222,7 @@ public class FoxMovement : MonoBehaviour
             gameObject.transform.rotation = Quaternion.AngleAxis(rot_z + 270, Vector3.forward) * Quaternion.Euler(0, 180, 270);
         }
     }
-
-
-
+    
     /// <summary>
     /// Called when the user presses left
     /// </summary>
@@ -253,16 +256,7 @@ public class FoxMovement : MonoBehaviour
         ReleaseBounce();
         rightPressed = false;
     }
-
-    /// <summary>
-    /// Getter for velocity
-    /// </summary>
-    /// <returns></returns>
-    public Vector3 GetVel()
-    {
-        return vel;
-    }
-
+    
     /// <summary>
     /// Reverses the fox's y velocity and decreases the fox's velocity by 75%
     /// </summary>

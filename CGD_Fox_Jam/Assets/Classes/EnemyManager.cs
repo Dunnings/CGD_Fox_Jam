@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager instance;
-
+    
     public List<GameObject> SpawnedEnemies = new List<GameObject>();
     public int MaxSpawnAmount;
     public int id = 0;

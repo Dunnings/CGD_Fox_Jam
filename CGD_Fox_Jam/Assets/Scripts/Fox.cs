@@ -82,13 +82,12 @@ public class Fox : MonoBehaviour {
             Destroy(x, 10f);
         }
 
-        lastPos = transform.position;
 
-        if (gameObject.GetComponent<FoxMovement>().GetVel().x > 0)
+        if (gameObject.GetComponent<FoxMovement>().vel.x > 0)
         {
             gameObject.transform.localScale = new Vector3(0.2f, gameObject.transform.localScale.y, gameObject.transform.localScale.z);
         }
-        else if (gameObject.GetComponent<FoxMovement>().GetVel().x < 0)
+        else if (gameObject.GetComponent<FoxMovement>().vel.x < 0)
         {
             gameObject.transform.localScale = new Vector3(-0.2f, gameObject.transform.localScale.y, gameObject.transform.localScale.z);
         }
@@ -102,9 +101,10 @@ public class Fox : MonoBehaviour {
             IncreaseHealth(m_sustainanceHealAmount * Time.deltaTime);
         }
     }
-
+    
     void LateUpdate()
     {
+        lastPos = transform.position;
         if(transform.position.y < WorldGenerator.Instance.m_surfacePos - WorldGenerator.Instance.m_depth)
         {
             GetComponent<FoxMovement>().BounceBottom();
@@ -118,7 +118,7 @@ public class Fox : MonoBehaviour {
             GetComponent<FoxMovement>().BounceSide();
         }
     }
-
+    
     private void PlayEnterEffect()
     {
         GameObject x = Instantiate(m_enterParticle);
@@ -207,7 +207,7 @@ public class Fox : MonoBehaviour {
         float rewardAmount = 10f;
         m_hunger = Mathf.Min(m_maxHunger, m_hunger + rewardAmount);
     }
-
+    
     public void OnTriggerEnter2D(Collider2D col)
     {
         if(col.gameObject.GetComponent<BulletProperties>() != null)
