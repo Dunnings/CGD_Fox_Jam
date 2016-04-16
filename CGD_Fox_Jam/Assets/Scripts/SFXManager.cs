@@ -5,18 +5,16 @@ public class SFXManager : MonoBehaviour
 {
 
     public List<AudioClip> deathSounds = new List<AudioClip>();
-
     public AudioSource m_source;
 
-    // Use this for initialization
-    void Start()
+    public void toggleSound(bool b)
     {
-    }
+        GameObject[] audioComps= GameObject.FindGameObjectsWithTag("Audio");
 
-    // Update is called once per frame
-    void Update()
-    {
-
+        foreach(GameObject g in audioComps)
+        {
+            g.GetComponent<AudioSource>().mute = b;
+        }
     }
 
     public void PlayDeathSound()

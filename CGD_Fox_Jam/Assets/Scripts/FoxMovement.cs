@@ -56,8 +56,9 @@ public class FoxMovement : MonoBehaviour
             //Toggle animation state
             m_animator.SetBool("burrowing", true);
             m_animator.SetBool("flying", false);
-            m_particles.SetActive(true);
-            m_particles.GetComponentInChildren<AudioSource>().mute = false;
+
+            m_particles.GetComponent<ParticleSystem>().enableEmission = true;
+            m_particles.GetComponentInChildren<AudioSource>().volume = .3f;
         }
         else if(breached && !lastFrameBreached)
         {
@@ -67,9 +68,9 @@ public class FoxMovement : MonoBehaviour
             m_animator.SetBool("flying", true);
             m_animator.SetBool("burrowing", false);
             breachSound.Play();
-            m_particles.GetComponentInChildren<AudioSource>().mute = true;
+            m_particles.GetComponentInChildren<AudioSource>().volume = 0f;
 
-            m_particles.SetActive(false);
+            m_particles.GetComponent<ParticleSystem>().enableEmission = false;
         }
 
         //The proposed new position

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -63,8 +64,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    GameObject soundButton;
+
     public void Init()
     {
+        soundButton = GameObject.Find("SoundToggle");
         audioComponent.clip = shotgunSounds[Random.Range(0, shotgunSounds.Count - 1)];
         //create a random type based on percent weights
         float thisRand = Random.Range(0.0f, 1.0f);
@@ -247,7 +251,9 @@ public class Enemy : MonoBehaviour
 
             //decrement top bullet
             TopBullet--;
-            audioComponent.Play();
+            if (!soundButton.GetComponent<Toggle>().isOn)
+                audioComponent.Play();
+
             muzzleFlash.enabled = true;
             Invoke("muzzleOff", 0.1f);
             gunAnim.Play("farmer_shoot");    

@@ -71,9 +71,10 @@ public class WorldGenerator : MonoBehaviour {
         }
 
         //Right
-        for (int x = -40; x < 30; x++)
+        
+        for (int x = 1; x < 25; x++)
         {
-            for (int i = 1; i < 30; i++)
+            for (int i = 1; i < 3; i++)
             {
                 GameObject newObj = Instantiate<GameObject>(m_bedrockPrefab);
                 newObj.transform.position = new Vector3((m_width / 2) + i * m_tileWidth, m_surfacePos - (x * m_tileWidth), 0f);
@@ -82,9 +83,9 @@ public class WorldGenerator : MonoBehaviour {
         }
 
         //Left
-        for (int x = -40; x < 30; x++)
+        for (int x = 1; x < 25; x++)
         {
-            for (int i = 1; i < 15; i++)
+            for (int i = 1; i < 3; i++)
             {
                 GameObject newObj = Instantiate<GameObject>(m_bedrockPrefab);
                 newObj.transform.position = new Vector3(-(m_width / 2) - i * m_tileWidth, m_surfacePos - (x * m_tileWidth), 0f);
